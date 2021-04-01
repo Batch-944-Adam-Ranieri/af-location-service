@@ -3,10 +3,8 @@ package com.revature.controllers;
 import com.revature.AFLocationService.AfLocationServiceApplication;
 import com.revature.entities.Location;
 import com.revature.services.LocationService;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.hamcrest.core.StringContains;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,9 +17,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -29,10 +28,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @AutoConfigureMockMvc
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class LocationControllerTest {
 
     @MockBean
-    static LocationService locationService;
+    LocationService locationService;
 
     @Autowired
     MockMvc mvc;
@@ -45,9 +45,20 @@ public class LocationControllerTest {
      */
 
     @BeforeAll
-    static void setup(){
+    void setup(){
         try {
-            Mockito.when(locationService.getLocationById(12)).thenReturn(new Location(12, "testCity", "testState", "testZip"));
+            ArrayList<Location> locations = new ArrayList<Location>();
+            locations.add(new Location(12, "testCity", "testState", "testZip"));
+
+            Mockito.when(locationService.getLocationById(12)).thenReturn(locations.get(0));
+            Mockito.when(locationService.getAllLocations()).thenReturn(locations);
+
+            Mockito.when(locationService.createLocation(Mockito.any(Location.class))).then(i-> i.getArguments()[0]);
+
+            Mockito.when(locationService.updateLocation(Mockito.any(Location.class))).then(i-> i.getArguments()[0]);
+
+            Mockito.when(locationService.deleteLocation(12)).thenReturn(true);
+
         }
         catch (Exception e){
             System.err.println("setup failed");
@@ -67,33 +78,75 @@ public class LocationControllerTest {
     }
 
     @Test
-    void createLocationTest() throws Exception{
-        ResultActions ra = mvc.perform(post("/locations"));
-        ra.andExpect(status().is(401));//is unauthorized
-    }
-
-    @Test
-    void updateLocationTest() throws Exception{
-        ResultActions ra = mvc.perform(post("/locations/12"));
+    void createLocationTestUnauthorized() throws Exception{
+        ResultActions ra = mvc.perform(post("/locations").header("Authorization", "unauthorized"));
         ra.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()));//is unauthorized
     }
 
     @Test
-    void deleteLocationTest() throws Exception{
-        ResultActions ra = mvc.perform(post("/locations/12"));
-        ra.andExpect(status().is(401));//is unauthorized
+    void updateLocationTestUnauthorized() throws Exception{
+        ResultActions ra = mvc.perform(post("/locations").header("Authorization", "unauthorized"));
+        ra.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()));//is unauthorized
+    }
+
+    @Test
+    void deleteLocationTestUnauthorized() throws Exception{
+        ResultActions ra = mvc.perform(post("/locations").header("Authorization", "unauthorized"));
+        ra.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()));//is unauthorized
     }
 
     @Test
     void getLocationByIdTestDoesNotExist() throws Exception{
         ResultActions ra = mvc.perform(get("/locations/9001"));
-        System.out.println(ra.andExpect(status().is(200)));
+        ra.andExpect(MockMvcResultMatchers.status().reason(StringContains.containsString("Cannot find location")));
     }
 
     @Test
     void updateLocationTestDoesNotExist() throws Exception{
         ResultActions ra = mvc.perform(post("/locations/9001"));
-        System.out.printf("ra status reason: %s\n", ra.andReturn());
-        //ra.andExpect(MockMvcResultMatchers.status().);//is unauthorized
+        //System.out.printf("ra status reason: %s\n", ra.andReturn());
+        ra.andExpect(MockMvcResultMatchers.status().reason(StringContains.containsString("Cannot find location")));
+    }
+
+    @Test
+    void deleteLocationTestDoesNotExist() throws Exception{
+        ResultActions ra = mvc.perform(post("/locations/9001"));
+        ra.andExpect(MockMvcResultMatchers.status().reason(StringContains.containsString("Cannot find location")));
+    }
+
+    @Test
+    void createLocationTest() throws Exception{
+        ResultActions ra = mvc.perform(post("/locations").header("Authorization", "authorized"));
+        ra.andExpect(status().is(HttpStatus.CREATED.value()));
+    }
+
+    @Test
+    void updateLocationTest() throws Exception{
+        ResultActions ra = mvc.perform(post("/locations/12").header("Authorization", "authorized"));
+        ra.andExpect(status().is(HttpStatus.OK.value()));
+    }
+
+    @Test
+    void deleteLocationTest() throws Exception{
+        ResultActions ra = mvc.perform(post("/locations/12").header("Authorization", "authorized"));
+        ra.andExpect(status().is(HttpStatus.OK.value()));
+    }
+
+    @Test
+    void createLocationTestNoAuthorizedToken() throws Exception{
+        ResultActions ra = mvc.perform(post("/locations"));
+        ra.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()));//is unauthorized
+    }
+
+    @Test
+    void updateLocationTestNoAuthorizedToken() throws Exception{
+        ResultActions ra = mvc.perform(post("/locations/12"));
+        ra.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()));//is unauthorized
+    }
+
+    @Test
+    void deleteLocationTestNoAuthorizedToken() throws Exception{
+        ResultActions ra = mvc.perform(post("/locations/12"));
+        ra.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()));//is unauthorized
     }
 }
