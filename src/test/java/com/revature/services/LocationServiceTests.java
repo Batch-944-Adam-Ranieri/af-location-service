@@ -11,30 +11,35 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.ArgumentMatchers.any;
+
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(classes = AfLocationServiceApplication.class)
 @ExtendWith(MockitoExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class LocationServiceTests {
 
     @InjectMocks
-    static LocationServiceImpl locationService;
+    LocationServiceImpl locationService;
 
 
-    static Location testLocation;
-    static List<Location> testLocationList;
-    static Location illegalLocation;
+    Location testLocation;
+    List<Location> testLocationList;
+    Location illegalLocation;
 
-    @Mock
-    static LocationRepo locationRepo = Mockito.mock(LocationRepo.class);
+    @MockBean
+    LocationRepo locationRepo;
 
     @BeforeAll
-    static void setUp() {
+    void setUp() {
 
         locationService = new LocationServiceImpl();
 
@@ -48,38 +53,57 @@ public class LocationServiceTests {
                 testLocation = location;
             }
             testLocationList.add(location);
+            System.out.println(location);
+            System.out.println("adjfkjahf");
 
         }
 
         illegalLocation = new Location(50,"madison","wi","53704");
 
         Mockito.when(locationRepo.findAll()).thenReturn(testLocationList);
-        Mockito.when(locationRepo.findById(1)).thenReturn(Optional.of(testLocation), Optional.empty());
-        Mockito.when(locationRepo.save(testLocation)).thenReturn(testLocation);
+        Mockito.when(locationRepo.findById(1)).thenReturn(Optional.of(testLocation));
+//        Mockito.when(locationRepo.findById(1).get()).thenReturn(testLocation);
+//        Mockito.when(locationRepo.findById(1)).thenReturn(Optional.empty());
+
+
+        Mockito.when(locationRepo.save(any())).thenReturn(testLocation);
         Mockito.when(locationRepo.findById(100)).thenReturn(Optional.empty());
         Mockito.when(locationRepo.findById(50)).thenReturn(Optional.empty());
 
 
+
     }
 
-    @Order(1)
+    @Test
+    void testMocking() {
+        Optional o = locationRepo.findById(1);
+        Assertions.assertNotNull(o.orElse(null));
+    }
+
+    @Order(9)
     @Test
     void create_location() {
-
-        Location location = locationService.createLocation(testLocation);
+        Location location = new Location(5,"Test City","Test State","20033");
+        location = locationService.createLocation(location);
+        System.out.println(location);
         Assertions.assertNotNull(location);
-
-
+        Assertions.assertEquals(0,location.getLocationId());
     }
 
     @Order(2)
     @Test
     void get_location_by_id_test() {
-        try {
-            Location location = locationService.getLocationById(1);
-            Assertions.assertNotNull(location);
-            Assertions.assertEquals(1, location.getLocationId());
 
+        try {
+            System.out.println(testLocation);
+            int id = testLocation.getLocationId();
+            Location location = locationService.getLocationById(id);
+
+            System.out.println(locationService.getLocationById(id));
+           // System.out.println(location);
+//            Assertions.assertNotNull(location);
+
+            Assertions.assertEquals(1, location.getLocationId());
         } catch (LocationNotFoundException e) {
             Assertions.fail();
         }
@@ -91,7 +115,7 @@ public class LocationServiceTests {
     @Test
     void get_all_locations_test() {
         List<Location> locations = locationService.getAllLocations();
-
+        System.out.println(locations);
         Assertions.assertNotNull(locations);
         Assertions.assertTrue(locations.size() > 1);
 
@@ -105,6 +129,7 @@ public class LocationServiceTests {
         location.setCity("new test city");
         try {
             location = locationService.updateLocation(location);
+            System.out.println(location);
             Assertions.assertNotNull(location);
             Assertions.assertEquals("new test city", location.getCity());
 
@@ -114,7 +139,7 @@ public class LocationServiceTests {
     }
 
 
-    @Order(5)
+    @Order(10)
     @Test
     void delete_location() {
         Assertions.assertTrue(locationService.deleteLocation(1));
@@ -125,6 +150,7 @@ public class LocationServiceTests {
     void get_location_by_id_exception_test() {
         try {
             Location location = locationService.getLocationById(100);
+            System.out.println(location);
             Assertions.fail();
         } catch (LocationNotFoundException e) {
         }
@@ -136,6 +162,7 @@ public class LocationServiceTests {
     void update_location_exception_test() {
         try {
             Location location = locationService.updateLocation(illegalLocation);
+            System.out.println(location);
             Assertions.fail();
         } catch (LocationNotFoundException e) {
         }
