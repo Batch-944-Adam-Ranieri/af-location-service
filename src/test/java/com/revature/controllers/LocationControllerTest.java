@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,11 +38,9 @@ public class LocationControllerTest {
 
     /*
         - `POST, GET /locations` <-- Post is only available for admins
-        - `POST, GET /locations/{locationId}/buildings`<-- Post is only available for admins
-        - `POST, GET /locations/{locationId}/buildings/{buildingId}/rooms`<-- Post is only available for admins
+
         - `DELETE, PUT, GET /locations/{locationId}`<-- delete and put is only available to admins
-        - `DELETE, PUT, GET /locations/{locationId}/buildings/{buildingId}`<-- delete and put is only available to admins
-        - `DELETE, PUT, GET /locations/{locationId}/buildings/{buildingId}/rooms/{roomId}` <-- delete and put is only available to admins
+
      */
 
     @BeforeAll
@@ -57,7 +56,30 @@ public class LocationControllerTest {
     @Test
     void getLocationByIdTest() throws Exception{
         ResultActions ra = mvc.perform(get("/locations/12"));
-        //ra.andExpect(status() == 200);
-        System.out.println(ra.andExpect(status() HttpStatus.OK)));
+        System.out.println(ra.andExpect(status().is(200)));
+    }
+
+    @Test
+    void getAllLocationsTest() throws Exception {
+        ResultActions ra = mvc.perform(get("/locations"));
+        ra.andExpect(status().is(200));
+    }
+
+    @Test
+    void createLocationTest() throws Exception{
+        ResultActions ra = mvc.perform(post("/locations"));
+        ra.andExpect(status().is(401));//is unauthorized
+    }
+
+    @Test
+    void updateLocationTest() throws Exception{
+        ResultActions ra = mvc.perform(post("/locations/12"));
+        ra.andExpect(status().is(401));//is unauthorized
+    }
+
+    @Test
+    void deleteLocationTest() throws Exception{
+        ResultActions ra = mvc.perform(post("/locations/12"));
+        ra.andExpect(status().is(401));//is unauthorized
     }
 }
