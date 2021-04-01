@@ -28,11 +28,11 @@ public class BuildingServiceTests {
     @InjectMocks
     BuildingServiceImpl buildingService;
 
-    @Mock
-    LocationRepo locationRepo = Mockito.mock(LocationRepo.class);
+    @MockBean
+    LocationRepo locationRepo;
 
-    @Mock
-    BuildingRepo buildingrepo = Mockito.mock(BuildingRepo.class);
+    @MockBean
+    BuildingRepo buildingrepo;
 
     Location testLocation;
     Location illegalLocation;
@@ -66,7 +66,9 @@ public class BuildingServiceTests {
     void testMocking() {
         Optional<Location> o = locationRepo.findById(1);
         Location l = o.orElse(null);
-        System.out.println(l);
+        Assertions.assertNotNull(l);
+
+        Assertions.assertNotNull(buildingrepo.findById(2).orElse(null));
     }
 
     @Test

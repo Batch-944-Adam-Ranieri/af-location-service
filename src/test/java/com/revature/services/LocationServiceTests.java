@@ -77,7 +77,7 @@ public class LocationServiceTests {
     @Test
     void testMocking() {
         Optional o = locationRepo.findById(1);
-        System.out.println(o.isPresent());
+        Assertions.assertNotNull(o.orElse(null));
     }
 
     @Order(9)

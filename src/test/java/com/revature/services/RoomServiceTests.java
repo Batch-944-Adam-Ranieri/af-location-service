@@ -74,7 +74,7 @@ public class RoomServiceTests {
     void testMocking() {
         Optional<Room> o = roomRepo.findById(2);
         Room l = o.orElse(null);
-        System.out.println(l);
+        Assertions.assertNotNull(l);
     }
 
     @Test
