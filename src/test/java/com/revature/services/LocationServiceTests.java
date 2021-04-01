@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,21 +24,22 @@ import static org.mockito.ArgumentMatchers.any;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(classes = AfLocationServiceApplication.class)
 @ExtendWith(MockitoExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class LocationServiceTests {
 
     @InjectMocks
-    static LocationServiceImpl locationService;
+    LocationServiceImpl locationService;
 
 
-    static Location testLocation;
-    static List<Location> testLocationList;
-    static Location illegalLocation;
+    Location testLocation;
+    List<Location> testLocationList;
+    Location illegalLocation;
 
-    @Mock
-    static LocationRepo locationRepo = Mockito.mock(LocationRepo.class);
+    @MockBean
+    LocationRepo locationRepo;
 
     @BeforeAll
-    static void setUp() {
+    void setUp() {
 
         locationService = new LocationServiceImpl();
 
@@ -70,6 +72,12 @@ public class LocationServiceTests {
 
 
 
+    }
+
+    @Test
+    void testMocking() {
+        Optional o = locationRepo.findById(1);
+        System.out.println(o.isPresent());
     }
 
     @Order(9)
