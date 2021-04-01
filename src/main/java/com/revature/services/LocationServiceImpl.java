@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Service
@@ -17,39 +18,57 @@ public class LocationServiceImpl implements LocationService{
     @Autowired
     LocationRepo locationRepo;
 
-    public LocationServiceImpl() {
-    }
-
-    public LocationRepo getLocationRepo() {
-        return locationRepo;
-    }
-
-    public void setLocationRepo(LocationRepo locationRepo) {
-        this.locationRepo = locationRepo;
-    }
+//    public LocationServiceImpl() {
+//    }
+//
+//    public LocationRepo getLocationRepo() {
+//
+//        return locationRepo;
+//    }
+//
+//    public void setLocationRepo(LocationRepo locationRepo) {
+//        this.locationRepo = locationRepo;
+//    }
 
     @Override
     public Location createLocation(Location location) {
-        return null;
+        location.setLocationId(0);
+        this.locationRepo.save(location);
+        return location;
     }
 
     @Override
     public Location getLocationById(int id) throws LocationNotFoundException {
-        return null;
+
+        Location location;
+        Optional<Location> op = locationRepo.findById(id);
+
+        if(op.isPresent()) {
+            location = op.get();
+            System.out.println(location);
+        }else{
+            throw new LocationNotFoundException();
+        }
+        return location;
+
+//        return location;
     }
+
 
     @Override
     public List<Location> getAllLocations() {
-        return null;
+
+        return (List<Location>) this.locationRepo.findAll();
     }
 
     @Override
     public Location updateLocation(Location location) throws LocationNotFoundException {
-        return null;
+        return this.locationRepo.save(location);
     }
 
     @Override
     public boolean deleteLocation(int id) {
-        return false;
+        this.locationRepo.deleteById(id);
+        return true;
     }
 }
