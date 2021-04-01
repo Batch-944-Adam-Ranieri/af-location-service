@@ -17,36 +17,38 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.revature.services.BuildingServiceTests.illegalBuilding;
-import static com.revature.services.BuildingServiceTests.testBuildingList;
+//import static com.revature.services.BuildingServiceTests.illegalBuilding;
+//import static com.revature.services.BuildingServiceTests.testBuildingList;
 
 @SpringBootTest(classes = AfLocationServiceApplication.class)
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RoomServiceTests {
 
     @InjectMocks
     RoomServiceImpl roomService;
 
-    @Mock
-    static RoomRepo roomRepo = Mockito.mock(RoomRepo.class);;
+    @MockBean
+    RoomRepo roomRepo;
 
-    @Mock
-    static BuildingRepo buldingRepo = Mockito.mock(BuildingRepo.class);
+    @MockBean
+    BuildingRepo buldingRepo;
 
-    static Room testRoom;
-    static Room illegalRoom;
-    static Building testBuilding;
-    static Building illegalBuilding;
-    static Location testLocation;
+    Room testRoom;
+    Room illegalRoom;
+    Building testBuilding;
+    Building illegalBuilding;
+    Location testLocation;
 
     @BeforeAll
-    static void setup(){
+    void setup(){
         testLocation = new Location(1, "Test City", "Test State","testzip");
         testBuilding = new Building(1,"Test Building",1);
 
@@ -61,11 +63,18 @@ public class RoomServiceTests {
 
         Mockito.when(roomRepo.save(testRoom)).thenReturn(testRoom);
         Mockito.when(roomRepo.findAll()).thenReturn(testRoomList);
-        Mockito.when(roomRepo.findById(2)).thenReturn(Optional.of(testRoomList.get(2)));
+        Mockito.when(roomRepo.findById(2)).thenReturn(Optional.of(testRoomList.get(1)));
         Mockito.when(roomRepo.findById(100)).thenReturn(Optional.empty());
         Mockito.when(roomRepo.findById(100)).thenReturn(Optional.empty());
         Mockito.when(roomRepo.findRoomByBuildingId(illegalBuilding.getBuildingId())).thenReturn(new ArrayList<Room>());
 
+    }
+
+    @Test
+    void testMocking() {
+        Optional<Room> o = roomRepo.findById(2);
+        Room l = o.orElse(null);
+        System.out.println(l);
     }
 
     @Test

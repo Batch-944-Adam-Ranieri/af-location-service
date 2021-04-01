@@ -22,25 +22,26 @@ import java.util.*;
 @SpringBootTest(classes = AfLocationServiceApplication.class)
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BuildingServiceTests {
 
     @InjectMocks
     BuildingServiceImpl buildingService;
 
     @Mock
-    static LocationRepo locationRepo = Mockito.mock(LocationRepo.class);
+    LocationRepo locationRepo = Mockito.mock(LocationRepo.class);
 
     @Mock
-    static BuildingRepo buildingrepo = Mockito.mock(BuildingRepo.class);
+    BuildingRepo buildingrepo = Mockito.mock(BuildingRepo.class);
 
-    static Location testLocation;
-    static Location illegalLocation;
-    static List<Building> testBuildingList;
-    static Building testBuilding;
-    static Building illegalBuilding;
+    Location testLocation;
+    Location illegalLocation;
+    List<Building> testBuildingList;
+    Building testBuilding;
+    Building illegalBuilding;
 
     @BeforeAll
-    static void setup(){
+    void setup(){
 
         testBuildingList=new ArrayList<Building>();
         for(int i = 1; i < 5; i++){
@@ -59,6 +60,13 @@ public class BuildingServiceTests {
         Mockito.when(buildingrepo.findById(2)).thenReturn(Optional.of(testBuildingList.get(2)));
         Mockito.when(buildingrepo.findById(100)).thenReturn(Optional.empty());
         Mockito.when(buildingrepo.findBuildingsByLocationId(illegalLocation.getLocationId())).thenReturn(new ArrayList<Building>());
+    }
+
+    @Test
+    void testMocking() {
+        Optional<Location> o = locationRepo.findById(1);
+        Location l = o.orElse(null);
+        System.out.println(l);
     }
 
     @Test
