@@ -65,6 +65,12 @@ public class LocationControllerTest {
     }
 
     @Test
+    void createLocationTest() throws Exception{
+        ResultActions ra = mvc.perform(post("/locations").header("Authorization", "authorized"));
+        ra.andExpect(status().is(HttpStatus.CREATED.value()));
+    }
+
+    @Test
     void getLocationByIdTest() throws Exception{
         ResultActions ra = mvc.perform(get("/locations/12"));
         System.out.println(ra.andExpect(status().is(200)));
@@ -74,6 +80,18 @@ public class LocationControllerTest {
     void getAllLocationsTest() throws Exception {
         ResultActions ra = mvc.perform(get("/locations"));
         ra.andExpect(status().is(200));
+    }
+
+    @Test
+    void updateLocationTest() throws Exception{
+        ResultActions ra = mvc.perform(put("/locations/12").header("Authorization", "authorized"));
+        ra.andExpect(status().is(HttpStatus.OK.value()));
+    }
+
+    @Test
+    void deleteLocationTest() throws Exception{
+        ResultActions ra = mvc.perform(delete("/locations/12").header("Authorization", "authorized"));
+        ra.andExpect(status().is(HttpStatus.OK.value()));
     }
 
     @Test
@@ -91,6 +109,24 @@ public class LocationControllerTest {
     @Test
     void deleteLocationTestUnauthorized() throws Exception{
         ResultActions ra = mvc.perform(delete("/locations").header("Authorization", "unauthorized"));
+        ra.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()));//is unauthorized
+    }
+
+    @Test
+    void createLocationTestNoAuthorizedToken() throws Exception{
+        ResultActions ra = mvc.perform(post("/locations"));
+        ra.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()));//is unauthorized
+    }
+
+    @Test
+    void updateLocationTestNoAuthorizedToken() throws Exception{
+        ResultActions ra = mvc.perform(put("/locations/12"));
+        ra.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()));//is unauthorized
+    }
+
+    @Test
+    void deleteLocationTestNoAuthorizedToken() throws Exception{
+        ResultActions ra = mvc.perform(delete("/locations/12"));
         ra.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()));//is unauthorized
     }
 
@@ -113,39 +149,4 @@ public class LocationControllerTest {
         ra.andExpect(MockMvcResultMatchers.status().reason(StringContains.containsString("Cannot find location")));
     }
 
-    @Test
-    void createLocationTest() throws Exception{
-        ResultActions ra = mvc.perform(post("/locations").header("Authorization", "authorized"));
-        ra.andExpect(status().is(HttpStatus.CREATED.value()));
-    }
-
-    @Test
-    void updateLocationTest() throws Exception{
-        ResultActions ra = mvc.perform(put("/locations/12").header("Authorization", "authorized"));
-        ra.andExpect(status().is(HttpStatus.OK.value()));
-    }
-
-    @Test
-    void deleteLocationTest() throws Exception{
-        ResultActions ra = mvc.perform(delete("/locations/12").header("Authorization", "authorized"));
-        ra.andExpect(status().is(HttpStatus.OK.value()));
-    }
-
-    @Test
-    void createLocationTestNoAuthorizedToken() throws Exception{
-        ResultActions ra = mvc.perform(post("/locations"));
-        ra.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()));//is unauthorized
-    }
-
-    @Test
-    void updateLocationTestNoAuthorizedToken() throws Exception{
-        ResultActions ra = mvc.perform(put("/locations/12"));
-        ra.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()));//is unauthorized
-    }
-
-    @Test
-    void deleteLocationTestNoAuthorizedToken() throws Exception{
-        ResultActions ra = mvc.perform(delete("/locations/12"));
-        ra.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()));//is unauthorized
-    }
 }
