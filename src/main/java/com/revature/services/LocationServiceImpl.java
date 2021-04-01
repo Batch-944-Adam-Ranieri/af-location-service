@@ -63,7 +63,21 @@ public class LocationServiceImpl implements LocationService{
 
     @Override
     public Location updateLocation(Location location) throws LocationNotFoundException {
-        return this.locationRepo.save(location);
+//        if(this.locationRepo.existsById(location.getLocationId())){
+//            return this.locationRepo.save(location);
+//        }else {
+//            throw new LocationNotFoundException();
+//        }
+        Optional<Location> op = locationRepo.findById(location.getLocationId());
+        if (!op.isPresent())
+            throw new LocationNotFoundException();
+        Location oldLocation = op.get();
+        if (location.getCity() != null)
+            oldLocation.setCity(location.getCity());
+        if (location.getState() != null)
+            oldLocation.setState(location.getState());
+        oldLocation = locationRepo.save(oldLocation);
+        return oldLocation;
     }
 
     @Override
