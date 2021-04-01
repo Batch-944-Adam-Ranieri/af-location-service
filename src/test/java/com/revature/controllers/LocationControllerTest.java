@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -74,12 +75,25 @@ public class LocationControllerTest {
     @Test
     void updateLocationTest() throws Exception{
         ResultActions ra = mvc.perform(post("/locations/12"));
-        ra.andExpect(status().is(401));//is unauthorized
+        ra.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()));//is unauthorized
     }
 
     @Test
     void deleteLocationTest() throws Exception{
         ResultActions ra = mvc.perform(post("/locations/12"));
         ra.andExpect(status().is(401));//is unauthorized
+    }
+
+    @Test
+    void getLocationByIdTestDoesNotExist() throws Exception{
+        ResultActions ra = mvc.perform(get("/locations/9001"));
+        System.out.println(ra.andExpect(status().is(200)));
+    }
+
+    @Test
+    void updateLocationTestDoesNotExist() throws Exception{
+        ResultActions ra = mvc.perform(post("/locations/9001"));
+        System.out.printf("ra status reason: %s\n", ra.andReturn());
+        //ra.andExpect(MockMvcResultMatchers.status().);//is unauthorized
     }
 }
