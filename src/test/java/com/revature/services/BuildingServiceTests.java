@@ -73,15 +73,6 @@ public class BuildingServiceTests {
     }
 
     @Test
-    void testMocking() {
-        Optional<Location> o = locationRepo.findById(1);
-        Location l = o.orElse(null);
-        Assertions.assertNotNull(l);
-
-        Assertions.assertNotNull(buildingrepo.findById(2).orElse(null));
-    }
-
-    @Test
     @Order(1)
     void create_building_test() {
         Mockito.when(buildingrepo.save(testBuilding)).thenReturn(testBuilding);

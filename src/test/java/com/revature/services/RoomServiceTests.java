@@ -46,6 +46,7 @@ public class RoomServiceTests {
     Building testBuilding;
     Building illegalBuilding;
     Location testLocation;
+    List<Room> testRoomList;
 
     @BeforeAll
     void setup(){
@@ -77,13 +78,6 @@ public class RoomServiceTests {
         Optional<Room> o = roomRepo.findById(1);
         Room room = o.orElse(null);
         Assertions.assertNotNull(room);
-    }
-
-    @Test
-    void testMocking() {
-        Optional<Room> o = roomRepo.findById(2);
-        Room l = o.orElse(null);
-        Assertions.assertNotNull(l);
     }
 
     @Test

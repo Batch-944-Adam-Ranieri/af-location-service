@@ -289,7 +289,7 @@ public class BuildingControllerTests {
     void getAllBuildingsDoesNotExist() throws Exception {
         List<Building> buildings = new ArrayList<Building>();
         Location location = new Location(1000, "test","test","test");
-        Mockito.when(buildingService.getBuildingByLocation(location)).thenReturn(buildings);
+        Mockito.when(buildingService.getBuildingByLocation(location.getLocationId())).thenReturn(buildings);
         mvc.perform(MockMvcRequestBuilders
                 .get("/locations/1000/buildings")
                 .contentType(MediaType.APPLICATION_JSON)
