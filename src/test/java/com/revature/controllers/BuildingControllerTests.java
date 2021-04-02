@@ -1,20 +1,28 @@
 package com.revature.controllers;
 
 import com.revature.AFLocationService.AfLocationServiceApplication;
+import com.revature.entities.Building;
 import com.revature.services.BuildingService;
 import com.revature.services.LocationService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = AfLocationServiceApplication.class)
@@ -30,48 +38,60 @@ public class BuildingControllerTests {
     @Autowired
     MockMvc mvc;
 
+
     /*
         - `POST, GET /locations/{locationId}/buildings`<-- Post is only available for admins
         - `DELETE, PUT, GET /locations/{locationId}/buildings/{buildingId}`<-- delete and put is only available to admins
      */
-    @BeforeAll
-    void setup() {
-        try {
 
-        }
-        catch (Exception e){
-            System.err.println("setup failed");
-        }
+
+    @Test
+    void createBuildingTest() throws Exception{
+        String json = "{buildingId:0, address:test, locationId:1}";
+        Building building = new Building(0,"test", 1);
+        Building newBuilding = new Building(1,"test", 1);
+        Mockito.when(buildingService.createBuilding(building)).thenReturn(newBuilding);
+
+        mvc.perform(MockMvcRequestBuilders
+                .post("/locations/1/buildings/1")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization","Authorized"))
+                .andExpect(status().isCreated());
     }
 
-    /*
-    with valid authorization
-    without valid authorizations
-    without authorization token
-    with invalid location ID
-    with invalid building ID
-    create or update without body
-    create or update with invalid body
-     */
-
-    //with valid authorization
     @Test
     void getBuildingByIdTest() throws Exception{
-        ResultActions ra = mvc.perform(get("/locations/12/buildings/10").header("Authorization", "authorized"));
-        System.out.println(ra.andExpect(status().is(HttpStatus.OK.value())));
+        Building building = new Building(1,"test", 1);
+        Mockito.when(buildingService.getBuildingById(1)).thenReturn(building);
+
+        mvc.perform(MockMvcRequestBuilders
+                .get("/buildings/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization","Authorized"))
+                .andExpect(status().isOk());
     }
 
     @Test
     void getAllBuildingsTest() throws Exception {
-        ResultActions ra = mvc.perform(get("/locations/12/buildings").header("Authorization", "authorized"));
-        ra.andExpect(status().is(HttpStatus.OK.value()));
+        List<Building> buildings = new ArrayList<>();
+        for (int i = 1; i < 5; ++i) {
+            Building building = new Building(i,"test",i);
+            buildings.add(building);
+        }
+        Mockito.when(buildingService.getAllBuildings()).thenReturn(buildings);
+        mvc.perform(MockMvcRequestBuilders
+                .get("/buildings")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization","Authorized"))
+                .andExpect(status().isOk());
+
     }
 
-    @Test
-    void createBuildingTest() throws Exception{
-        ResultActions ra = mvc.perform(post("/locations/12/buildings").header("Authorization", "authorized"));
-        ra.andExpect(status().is(HttpStatus.CREATED.value()));
-    }
+
 
     @Test
     void updateBuildingTest() throws Exception{

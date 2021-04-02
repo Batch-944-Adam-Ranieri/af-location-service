@@ -53,6 +53,9 @@ class LocationControllerTest {
     @Test
     void createLocationTest() throws Exception{
         String json = "{locationId:0, city:test, state:test,zipcode:test}";
+        Location location = new Location(0,"test","test","test");
+        Location newLocation = new Location(1,"test","test","test");
+        Mockito.when(locationService.createLocation(location)).thenReturn(newLocation);
         mvc.perform(MockMvcRequestBuilders
                 .post("/locations")
                 .content(json)
@@ -210,7 +213,7 @@ class LocationControllerTest {
 
     @Test
     void deleteLocationTestDoesNotExist() throws Exception{
-        Mockito.when(locationService.deleteLocation(1000)).thenThrow(new LocationNotFoundException());
+        Mockito.when(locationService.deleteLocation(1000)).thenReturn(true);
         mvc.perform(MockMvcRequestBuilders
                 .delete("/locations/1000")
                 .contentType(MediaType.APPLICATION_JSON)
