@@ -2,6 +2,9 @@ package com.revature.controllers;
 
 import com.revature.AFLocationService.AfLocationServiceApplication;
 import com.revature.entities.Building;
+import com.revature.entities.Location;
+import com.revature.exceptions.BuildingNotFoundException;
+import com.revature.exceptions.LocationNotFoundException;
 import com.revature.services.BuildingService;
 import com.revature.services.LocationService;
 import org.junit.jupiter.api.*;
@@ -100,7 +103,7 @@ public class BuildingControllerTests {
         Mockito.when(buildingService.updateBuilding(building)).thenReturn(building);
 
         mvc.perform(MockMvcRequestBuilders
-                .post("/locations/1/buildings/1")
+                .put("/locations/1/buildings/1")
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -121,89 +124,178 @@ public class BuildingControllerTests {
 
     //without valid authorizations
     @Test
-    void createBuildingTestUnauthorized() throws Exception{
-        ResultActions ra = mvc.perform(post("/locations/12/buildings").header("Authorization", "unauthorized"));
-        ra.andExpect(status().is(HttpStatus.CREATED.value()));
+    void createBuildingTestForbidden() throws Exception{
+        String json = "{buildingId:0, address:test, locationId:1}";
+        mvc.perform(MockMvcRequestBuilders
+                .post("/locations/1/buildings/1")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization","Unauthorized"))
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    void updateBuildingTestUnauthorized() throws Exception{
-        ResultActions ra = mvc.perform(put("/locations/12/buildings/10").header("Authorization", "unauthorized"));
-        ra.andExpect(status().is(HttpStatus.OK.value()));
+    void updateBuildingTestForbidden() throws Exception{
+        String json = "{buildingId:1, address:newtest, locationId:1}";
+        mvc.perform(MockMvcRequestBuilders
+                .put("/locations/1/buildings/1")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization","Unauthorized"))
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    void deleteBuildingTestUnauthorized() throws Exception{
-        ResultActions ra = mvc.perform(delete("/locations/12/buildings/10").header("Authorization", "unauthorized"));
-        ra.andExpect(status().is(HttpStatus.OK.value()));
+    void deleteBuildingTestForbidden() throws Exception{
+        mvc.perform(MockMvcRequestBuilders
+                .delete("/locations/1/buildings/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization","Unauthorized"))
+                .andExpect(status().isForbidden());
     }
 
     //without authorization token
     @Test
-    void createBuildingTestNoAuthorizedToken() throws Exception{
-        ResultActions ra = mvc.perform(post("/locations/12/buildings"));
-        ra.andExpect(status().is(HttpStatus.CREATED.value()));
+    void createBuildingTestUnauthorized() throws Exception{
+        String json = "{buildingId:0, address:test, locationId:1}";
+        mvc.perform(MockMvcRequestBuilders
+                .post("/locations/1/buildings/1")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void updateBuildingTestNoAuthorizedToken() throws Exception{
-        ResultActions ra = mvc.perform(put("/locations/12/buildings/10"));
-        ra.andExpect(status().is(HttpStatus.OK.value()));
+    void updateBuildingTestUnauthorized() throws Exception{
+        String json = "{buildingId:1, address:newtest, locationId:1}";
+        mvc.perform(MockMvcRequestBuilders
+                .put("/locations/1/buildings/1")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void deleteBuildingTestNoAuthorizedToken() throws Exception{
-        ResultActions ra = mvc.perform(delete("/locations/12/buildings/10"));
-        ra.andExpect(status().is(HttpStatus.OK.value()));
+    void deleteBuildingTestUnauthorized() throws Exception{
+        mvc.perform(MockMvcRequestBuilders
+                .delete("/locations/1/buildings/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
 
-    //with invalid ID
+//    //with invalid ID
+//    @Test
+//    void createBuildingLocationDoesNotExistTest() throws Exception{
+//        String json = "{buildingId:0, address:test, locationId:10000}";
+//        Building building = new Building(0,"test", 10000);
+//        Mockito.when(buildingService.createBuilding(building)).thenThrow(new LocationNotFoundException());
+//
+//        mvc.perform(MockMvcRequestBuilders
+//                .post("/locations/10000/buildings/1")
+//                .content(json)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .header("Authorization","Authorized"))
+//                .andExpect(status().reason("Location not found"));
+//    }
+
+//    @Test
+//    void updateBuildingLocationDoesNotExistTest() throws Exception{
+//        String json = "{buildingId:1, address:newtest, locationId:1000}";
+//        Building building = new Building(1,"newtest", 1000);
+//        Mockito.when(buildingService.updateBuilding(building)).thenThrow(new LocationNotFoundException());
+//
+//        mvc.perform(MockMvcRequestBuilders
+//                .put("/locations/1000/buildings/1")
+//                .content(json)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .header("Authorization","Authorized"))
+//                .andExpect(status().reason("Location not found"));
+//    }
+
     @Test
-    void createBuildingTestDoesNotExist() throws Exception{
-        ResultActions ra = mvc.perform(post("/locations/90001/buildings").header("Authorization", "authorized"));
-        ra.andExpect(status().is(HttpStatus.CREATED.value()));
+    void updateBuildingBuildingDoesNotExistTest() throws Exception{
+        String json = "{buildingId:1000, address:newtest, locationId:1}";
+        Building building = new Building(1000,"newtest", 1);
+        Mockito.when(buildingService.updateBuilding(building)).thenThrow(new BuildingNotFoundException());
+
+        mvc.perform(MockMvcRequestBuilders
+                .put("/locations/1/buildings/1000")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization","Authorized"))
+                .andExpect(status().reason("Location not found"));
     }
 
     @Test
-    void updateBuildingTestLocationDoesNotExist() throws Exception{
-        ResultActions ra = mvc.perform(put("/locations/90001/buildings/10").header("Authorization", "authorized"));
-        ra.andExpect(status().is(HttpStatus.OK.value()));
+    void deleteBuildingLocationDoesNotExistTest() throws Exception{
+        Mockito.when(buildingService.deleteBuildingById(1)).thenReturn(true);
+
+        mvc.perform(MockMvcRequestBuilders
+                .delete("/locations/1000/buildings/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization","Authorized"))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void updateBuildingTestBuildingDoesNotExist() throws Exception{
-        ResultActions ra = mvc.perform(put("/locations/12/buildings/90001").header("Authorization", "authorized"));
-        ra.andExpect(status().is(HttpStatus.OK.value()));
+    void deleteBuildingBuildingDoesNotExistTest() throws Exception{
+        Mockito.when(buildingService.deleteBuildingById(1000)).thenReturn(true);
+
+        mvc.perform(MockMvcRequestBuilders
+                .delete("/locations/1/buildings/1000")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization","Authorized"))
+                .andExpect(status().isOk());
+    }
+
+//    @Test
+//    void getBuildingByIdLocationDoesNotExistTest() throws Exception{
+//
+//        Mockito.when(buildingService.getBuildingById(1)).thenThrow()
+//
+//        mvc.perform(MockMvcRequestBuilders
+//                .get("/locations/1/buildings/1")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .header("Authorization","Authorized"))
+//                .andExpect(status().isOk());
+//    }
+
+    @Test
+    void getBuildingByIdBuildingDoesNotExistTest() throws Exception{
+
+        Mockito.when(buildingService.getBuildingById(1)).thenThrow(new BuildingNotFoundException());
+
+        mvc.perform(MockMvcRequestBuilders
+                .get("/locations/1/buildings/1000")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization","Authorized"))
+                .andExpect(status().reason("Building not found"));
     }
 
     @Test
-    void deleteBuildingTestLocationDoesNotExist() throws Exception{
-        ResultActions ra = mvc.perform(delete("/locations/90001/buildings/10").header("Authorization", "authorized"));
-        ra.andExpect(status().is(HttpStatus.OK.value()));
-    }
-
-    @Test
-    void deleteBuildingTestBuildingDoesNotExist() throws Exception{
-        ResultActions ra = mvc.perform(delete("/locations/12/buildings/9001").header("Authorization", "authorized"));
-        ra.andExpect(status().is(HttpStatus.OK.value()));
-    }
-
-    @Test
-    void getBuildingByIdTestLocationDoesNotExist() throws Exception{
-        ResultActions ra = mvc.perform(get("/locations/12/buildings/9001").header("Authorization", "authorized"));
-        System.out.println(ra.andExpect(status().is(HttpStatus.OK.value())));
-    }
-
-    @Test
-    void getBuildingByIdTestBuildingDoesNotExist() throws Exception{
-        ResultActions ra = mvc.perform(get("/locations/12/buildings/90001").header("Authorization", "authorized"));
-        System.out.println(ra.andExpect(status().is(HttpStatus.OK.value())));
-    }
-
-    @Test
-    void getAllBuildingsTestDoesNotExist() throws Exception {
-        ResultActions ra = mvc.perform(get("/locations/9001/buildings").header("Authorization", "authorized"));
-        ra.andExpect(status().is(HttpStatus.OK.value()));
+    void getAllBuildingsDoesNotExist() throws Exception {
+        List<Building> buildings = new ArrayList<Building>();
+        Location location = new Location(1000, "test","test","test");
+        Mockito.when(buildingService.getBuildingByLocation(location)).thenReturn(buildings);
+        mvc.perform(MockMvcRequestBuilders
+                .get("/locations/1000/buildings")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization","Authorized"))
+                .andExpect(status().isOk());
     }
 
     //create or update without body
