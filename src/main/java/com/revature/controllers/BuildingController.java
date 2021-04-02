@@ -3,6 +3,7 @@ package com.revature.controllers;
 
 import com.revature.dtos.BuildingDto;
 import com.revature.entities.Building;
+import com.revature.exceptions.BuildingNotFoundException;
 import com.revature.services.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -29,71 +30,89 @@ public class BuildingController {
     BuildingService buildingService;
 
     @PostMapping("/locations/{locationId}/buildings")
-    public ResponseEntity<Building> createBuilding(@PathVariable int locationId, @RequestBody BuildingDto buildingDTO){
-        System.out.println("createBuilding controller called");
-        Building building = getBuilding(buildingDTO, locationId);
+    public ResponseEntity<Building> createBuilding(@PathVariable int locationId, @RequestBody BuildingDto buildingDTO, @RequestHeader(name = "Authorization", required = false) String auth){
 
-        try{
-            System.out.println(building);
-            this.buildingService.createBuilding(building);
-            System.out.println(building);
-            return ResponseEntity.status(HttpStatus.CREATED).body(building);
-
+        if (auth == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        else if(auth.equals("Authorized")){
+            Building building = getBuilding(buildingDTO, locationId);
+            this.buildingService.createBuilding(building);
+            return ResponseEntity.status(HttpStatus.CREATED).body(building);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
     }
 
     @GetMapping("/locations/{locationId}/buildings")
-    public ResponseEntity<List<Building>> getAllBuildings(@PathVariable int locationId){
-
-        try{
+    public ResponseEntity<List<Building>> getAllBuildings(@PathVariable int locationId, @RequestHeader(name = "Authorization", required = false) String auth){
+        if (auth == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        else if(auth.equals("Authorized")){
             List<Building> buildings = this.buildingService.getBuildingByLocation(locationId);
             return ResponseEntity.status(HttpStatus.OK).body(buildings);
         }
-        catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
     }
 
     @GetMapping("/locations/{locationId}/buildings/{buildingId}")
-    public ResponseEntity<Building> getBuildingById(@PathVariable int locationId, @PathVariable int buildingId){
-
-        try{
-            Building building = this.buildingService.getBuildingById(buildingId);
-            return ResponseEntity.status(HttpStatus.OK).body(building);
+    public ResponseEntity<Building> getBuildingById(@PathVariable int locationId, @PathVariable int buildingId, @RequestHeader(name = "Authorization", required = false) String auth){
+        if (auth == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        catch (Exception e){
-            System.out.println(e.getMessage());
-            //TODO return error message for BuildingNotFoundException
-            return ResponseEntity.status(HttpStatus.OK).body(null);
+        else if(auth.equals("Authorized")){
+            try {
+                Building building = this.buildingService.getBuildingById(buildingId);
+                if (building == null){
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(building);
+                }
+                return ResponseEntity.status(HttpStatus.OK).body(building);
+            }
+            catch (BuildingNotFoundException e){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
     }
 
     @PutMapping("/locations/{locationId}/buildings/{buildingId}")
-    public ResponseEntity<Building> updateBuilding(@PathVariable int locationId, @PathVariable int buildingId, @RequestBody BuildingDto buildingDTO){
+    public ResponseEntity<Building> updateBuilding(@PathVariable int locationId, @PathVariable int buildingId, @RequestBody BuildingDto buildingDTO, @RequestHeader(name = "Authorization", required = false) String auth){
+        if (auth == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        else if(auth.equals("Authorized")){
+            try {
+                Building building = this.getBuilding(buildingDTO, locationId);
+                building = this.buildingService.updateBuilding(building);
+                return ResponseEntity.status(HttpStatus.OK).body(building);
+            }
+            catch (BuildingNotFoundException e){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
 
-        try{
-            Building building = this.getBuilding(buildingDTO, locationId);
-            building = this.buildingService.updateBuilding(building);
-            return ResponseEntity.status(HttpStatus.OK).body(building);
-        }
-        catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
     }
 
     @DeleteMapping("/locations/{locationId}/buildings/{buildingId}")
-    public ResponseEntity<Building> deleteBuilding(@PathVariable int locationId, @PathVariable int buildingId){
-
-        try{
+    public ResponseEntity<Building> deleteBuilding(@PathVariable int locationId, @PathVariable int buildingId, @RequestHeader(name = "Authorization", required = false) String auth){
+        if (auth == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        else if(auth.equals("Authorized")){
             this.buildingService.deleteBuildingById(buildingId);
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }
-        catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
     }
 
@@ -102,7 +121,6 @@ public class BuildingController {
         building.setBuildingId(dto.getBuildingId());
         building.setAddress(dto.getAddress());
         building.setLocationId(locationId);
-        //building.setRooms(dto.getRooms());
         return building;
     }
 

@@ -234,7 +234,7 @@ public class BuildingControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization","Authorized"))
-                .andExpect(status().reason("Location not found"));
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -284,7 +284,7 @@ public class BuildingControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization","Authorized"))
-                .andExpect(status().reason("Building not found"));
+                .andExpect(status().isNotFound());
     }
 
     @Test
