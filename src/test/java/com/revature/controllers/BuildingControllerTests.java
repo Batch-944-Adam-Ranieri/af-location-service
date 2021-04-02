@@ -67,7 +67,7 @@ public class BuildingControllerTests {
         Mockito.when(buildingService.getBuildingById(1)).thenReturn(building);
 
         mvc.perform(MockMvcRequestBuilders
-                .get("/buildings/1")
+                .get("/locations/1/buildings/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization","Authorized"))
@@ -75,15 +75,15 @@ public class BuildingControllerTests {
     }
 
     @Test
-    void getAllBuildingsTest() throws Exception {
+    void getAllBuildingsOfLocationTest() throws Exception {
         List<Building> buildings = new ArrayList<>();
         for (int i = 1; i < 5; ++i) {
-            Building building = new Building(i,"test",i);
+            Building building = new Building(i,"test",1);
             buildings.add(building);
         }
         Mockito.when(buildingService.getAllBuildings()).thenReturn(buildings);
         mvc.perform(MockMvcRequestBuilders
-                .get("/buildings")
+                .get("/locations/1/buildings")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization","Authorized"))
@@ -95,14 +95,28 @@ public class BuildingControllerTests {
 
     @Test
     void updateBuildingTest() throws Exception{
-        ResultActions ra = mvc.perform(put("/locations/12/buildings/10").header("Authorization", "authorized"));
-        ra.andExpect(status().is(HttpStatus.OK.value()));
+        String json = "{buildingId:1, address:newtest, locationId:1}";
+        Building building = new Building(1,"newtest", 1);
+        Mockito.when(buildingService.updateBuilding(building)).thenReturn(building);
+
+        mvc.perform(MockMvcRequestBuilders
+                .post("/locations/1/buildings/1")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization","Authorized"))
+                .andExpect(status().isOk());
     }
 
     @Test
     void deleteBuildingTest() throws Exception{
-        ResultActions ra = mvc.perform(delete("/locations/12/buildings/10").header("Authorization", "authorized"));
-        ra.andExpect(status().is(HttpStatus.OK.value()));
+        Mockito.when(buildingService.deleteBuildingById(1)).thenReturn(true);
+        mvc.perform(MockMvcRequestBuilders
+                .delete("/locations/1/buildings/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization","Authorized"))
+                .andExpect(status().isOk());
     }
 
     //without valid authorizations
