@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -61,8 +62,8 @@ public class RoomControllerTests {
                 .post("/locations/1/buildings/1/rooms")
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-//                .header("Authorization","Authorized"))
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization","Authorized"))
                 .andExpect(status().isCreated());
     }
     @Test
@@ -73,8 +74,8 @@ public class RoomControllerTests {
         mvc.perform(MockMvcRequestBuilders
                 .get("/locations/1/buildings/1/rooms/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-//                .header("Authorization","Authorized"))
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization","Authorized"))
                 .andExpect(status().isOk());
     }
     @Test
@@ -89,8 +90,8 @@ public class RoomControllerTests {
         mvc.perform(MockMvcRequestBuilders
                 .get("/locations/1/buildings/1/rooms")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-//                .header("Authorization","Authorized"))
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization","Authorized"))
                 .andExpect(status().isOk());
     }
     @Test
@@ -109,7 +110,7 @@ public class RoomControllerTests {
     }
     @Test
     void deleteRoomTest()throws Exception{
-        Mockito.when(roomService.deleteRoom(1)).thenReturn(true);
+        Mockito.when(roomService.deleteRoom(anyInt())).thenReturn(true);
 
         mvc.perform(MockMvcRequestBuilders
                 .delete("/locations/1/buildings/1/rooms/1")
@@ -180,7 +181,7 @@ public class RoomControllerTests {
                 .delete("/locations/1/buildings/1/rooms/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
     @Test
     void getRoomNotExistTest()throws Exception{
