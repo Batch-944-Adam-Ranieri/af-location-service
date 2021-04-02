@@ -15,7 +15,6 @@ import java.util.List;
 
 @Component
 @RestController
-@CrossOrigin
 public class RoomController {
 
     @Autowired
