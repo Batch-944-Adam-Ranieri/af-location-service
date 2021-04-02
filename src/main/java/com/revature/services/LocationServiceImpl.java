@@ -82,7 +82,13 @@ public class LocationServiceImpl implements LocationService{
 
     @Override
     public boolean deleteLocation(int id) {
-        this.locationRepo.deleteById(id);
-        return true;
+
+        try{
+            this.locationRepo.deleteById(id);
+            return true;
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 }

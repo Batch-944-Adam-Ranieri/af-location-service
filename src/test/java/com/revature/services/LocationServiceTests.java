@@ -43,9 +43,7 @@ public class LocationServiceTests {
 
         locationService = new LocationServiceImpl();
 
-
         testLocationList = new ArrayList<Location>();
-
 
         for (int i = 1; i < 5; i++) {
             Location location = new Location(i, "testcity" + i, "teststate" + i, "testzip" + i);
@@ -53,7 +51,6 @@ public class LocationServiceTests {
                 testLocation = location;
             }
             testLocationList.add(location);
-
         }
 
         illegalLocation = new Location(100,"madison","wi","53704");
