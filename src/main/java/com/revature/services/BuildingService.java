@@ -13,7 +13,7 @@ public interface BuildingService {
 
     List<Building> getAllBuildings();
     Building getBuildingById(int id) throws BuildingNotFoundException;
-    List<Building> getBuildingByLocation(Location location);
+    List<Building> getBuildingByLocation(int locationId);
 
     Building updateBuilding(Building building) throws BuildingNotFoundException;
 

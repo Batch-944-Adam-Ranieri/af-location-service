@@ -52,22 +52,31 @@ public class RoomServiceTests {
         testLocation = new Location(1, "Test City", "Test State","testzip");
         testBuilding = new Building(1,"Test Building",1);
 
-        List<Room> testRoomList = new ArrayList<Room>();
+        testRoomList = new ArrayList<Room>();
         for(int i = 1; i < 5; i++){
             Room room = new Room(i,"Room "+i,RoomType.CLASSROOM,50,1);
+            if(i==1){
+                testRoom=room;
+            }
             testRoomList.add(room);
         }
-        testRoom = testRoomList.get(1);
-        illegalRoom = new Room(100,"Illegal Name",RoomType.CLASSROOM,10000,100);
         illegalBuilding = new Building(100,"Illegal Address",100);
 
-        Mockito.when(roomRepo.save(testRoom)).thenReturn(testRoom);
-        Mockito.when(roomRepo.findAll()).thenReturn(testRoomList);
-        Mockito.when(roomRepo.findById(2)).thenReturn(Optional.of(testRoomList.get(1)));
-        Mockito.when(roomRepo.findById(100)).thenReturn(Optional.empty());
-        Mockito.when(roomRepo.findById(100)).thenReturn(Optional.empty());
-        Mockito.when(roomRepo.findRoomByBuildingId(illegalBuilding.getBuildingId())).thenReturn(new ArrayList<Room>());
+//        Mockito.when(roomRepo.save(testRoom)).thenReturn(testRoom);
+//        Mockito.when(roomRepo.findAll()).thenReturn(testRoomList);
+//        Mockito.when(roomRepo.findById(2)).thenReturn(Optional.of(testRoomList.get(1)));
+//        Mockito.when(roomRepo.findById(100)).thenReturn(Optional.empty());
+//        Mockito.when(roomRepo.findRoomByBuildingId(illegalBuilding.getBuildingId())).thenReturn(new ArrayList<Room>());
 
+    }
+
+    @Test
+    void testMocking() {
+        Mockito.when(roomRepo.findById(1)).thenReturn(Optional.of(testRoom));
+
+        Optional<Room> o = roomRepo.findById(1);
+        Room room = o.orElse(null);
+        Assertions.assertNotNull(room);
     }
 
     @Test
@@ -80,15 +89,19 @@ public class RoomServiceTests {
     @Test
     @Order(1)
     void create_room_test(){
-        Room room = new Room(0,"New Room", RoomType.CLASSROOM,30,1);
+        Mockito.when(roomRepo.save(testRoom)).thenReturn(testRoom);
+
+        Room room = new Room(5,"New Room", RoomType.CLASSROOM,30,1);
         room = this.roomService.createRoom(room);
         Assertions.assertNotNull(room);
-        Assertions.assertNotEquals(0,room.getRoomId());
+        Assertions.assertEquals(0,room.getRoomId());
     }
 
     @Test
     @Order(2)
     void get_all_rooms_test(){
+        Mockito.when(roomRepo.findAll()).thenReturn(testRoomList);
+
         List<Room> rooms = this.roomService.getAllRooms();
         Assertions.assertNotNull(rooms);
         Assertions.assertNotEquals(1,rooms.size());
@@ -97,10 +110,13 @@ public class RoomServiceTests {
     @Test
     @Order(3)
     void get_room_by_id(){
+        Mockito.when(roomRepo.findById(testRoom.getRoomId())).thenReturn(Optional.of(testRoom));
+
         try{
-            Room room = this.roomService.getRoomById(testRoom.getRoomId());
+            int id = testRoom.getRoomId();
+            Room room = this.roomService.getRoomById(id);
             Assertions.assertNotNull(room);
-            Assertions.assertEquals(testRoom.getRoomId(), room.getRoomId());
+            Assertions.assertEquals(id, room.getRoomId());
         }catch(RoomNotFoundException e) {
             Assertions.fail();
         }
@@ -109,6 +125,8 @@ public class RoomServiceTests {
     @Test
     @Order(4)
     void get_rooms_by_building_id_test(){
+        Mockito.when(roomRepo.findRoomByBuildingId(testBuilding.getBuildingId())).thenReturn(testRoomList);
+
         int id = testBuilding.getBuildingId();
         List<Room> rooms = this.roomService.getRoomsByBuildingId(id);
         Assertions.assertNotNull(rooms);
@@ -120,9 +138,13 @@ public class RoomServiceTests {
     @Test
     @Order(5)
     void update_room_test(){
+        Mockito.when(roomRepo.findById(testRoom.getRoomId())).thenReturn(Optional.of(testRoom));
+        Mockito.when(roomRepo.save(testRoom)).thenReturn(testRoom);
+
         try{
+            int roomId = testRoom.getRoomId();
             String updatedRoomName = "Updated Room Name";
-            Room room = new Room(testRoom.getRoomId(), updatedRoomName, testRoom.getType(), testRoom.getCapacity(), testRoom.getBuildingId());
+            Room room = new Room(roomId, updatedRoomName, testRoom.getType(), testRoom.getCapacity(), testRoom.getBuildingId());
             room = this.roomService.updateRoom(room);
             Assertions.assertNotNull(room);
             Assertions.assertEquals(updatedRoomName, room.getName());
@@ -134,6 +156,8 @@ public class RoomServiceTests {
     @Test
     @Order(6)
     void get_room_by_id_exception_test(){
+        Mockito.when(roomRepo.findById(100)).thenReturn(Optional.empty());
+
         try{
             this.roomService.getRoomById(100);
             Assertions.fail();
@@ -145,12 +169,26 @@ public class RoomServiceTests {
     @Test
     @Order(7)
     void update_room_exception_test(){
+        Mockito.when(roomRepo.findById(100)).thenReturn(Optional.empty());
+        Mockito.when(roomRepo.save(illegalRoom)).thenReturn(illegalRoom);
+        illegalRoom = new Room(100,"Illegal Name",RoomType.CLASSROOM,10000,100);
+
         try{
             this.roomService.updateRoom(illegalRoom);
             Assertions.fail();
         }catch(RoomNotFoundException e){
 
         }
+    }
+
+    @Test
+    @Order(8)
+    void delete_room(){
+        Mockito.when(roomRepo.findById(testRoom.getRoomId())).thenReturn(Optional.of(testRoom));
+        int id = testRoom.getRoomId();
+
+//        Assertions.assertNotNull(id);
+        Assertions.assertTrue(roomService.deleteRoom(testRoom.getRoomId()));
     }
 
 }

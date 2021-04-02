@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Service
@@ -32,35 +33,56 @@ public class BuildingServiceImpl implements BuildingService{
 
     @Override
     public Building createBuilding(Building building) {
-        return null;
-//        return this.buildingRepo.save(building);
+        building.setBuildingId(0);
+        this.buildingRepo.save(building);
+        return building;
     }
 
     @Override
     public List<Building> getAllBuildings() {
-//        return (List<Building>) this.buildingRepo.findAll();
-        return null;
+        return (List<Building>) this.buildingRepo.findAll();
     }
 
     @Override
     public Building getBuildingById(int id) throws BuildingNotFoundException {
-//        return this.buildingRepo.findById(id).orElse(null);
-        return null;
+        Building building;
+        Optional<Building> op = buildingRepo.findById(id);
+
+        if(op.isPresent()) {
+            building = op.get();
+            System.out.println(building);
+        }else{
+            throw new BuildingNotFoundException();
+        }
+        return building;
     }
 
     @Override
-    public List<Building> getBuildingByLocation(Location location){
-        return null;
-//        int id = location.getLocationId();
-//        List<Building> buildings = this.buildingRepo.findBuildingsByLocationId(id);
-//        // Add logic for searching by city OR state
-//        return buildings;
+    public List<Building> getBuildingByLocation(int locationId){
+
+        List<Building> buildings = buildingRepo.findBuildingsByLocationId(locationId);
+
+        return buildings;
+//        if(op.isPresent()) {
+//            location = op.get();
+//            System.out.println(location);
+//        }else{
+//            throw new LocationNotFoundException();
+//        }
+//        return location;
     }
 
     @Override
     public Building updateBuilding(Building building) throws BuildingNotFoundException {
-//        return this.buildingRepo.save(building);
-        return null;
+
+        Optional<Building> op = buildingRepo.findById(building.getBuildingId());
+        if (!op.isPresent())
+            throw new BuildingNotFoundException();
+        Building oldBuilding = op.get();
+        if (building.getAddress() != null)
+            oldBuilding.setAddress(building.getAddress());
+        Building updatedBuilding = buildingRepo.save(oldBuilding);
+        return updatedBuilding;
     }
 
     @Override
@@ -72,6 +94,11 @@ public class BuildingServiceImpl implements BuildingService{
 //            e.printStackTrace();
 //            return false;
 //        }
-        return false;
+        try {
+            this.buildingRepo.deleteById(id);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 }

@@ -19,6 +19,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.*;
 
+import static org.mockito.ArgumentMatchers.any;
+
 @SpringBootTest(classes = AfLocationServiceApplication.class)
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -46,20 +48,28 @@ public class BuildingServiceTests {
         testBuildingList=new ArrayList<Building>();
         for(int i = 1; i < 5; i++){
             Building building = new Building(i, "test "+i, 1);
+            if(i==1) {
+                testBuilding = building;
+            }
             testBuildingList.add(building);
         }
 
-        testBuilding = testBuildingList.get(1);
-        illegalBuilding = new Building(1000,"Illegal Building Address",1000);
+        illegalBuilding = new Building(100,"Illegal Building Address",100);
         testLocation = new Location(1, "Dallas","TX","75019");
-        illegalLocation = new Location(1000,"Illegal City","Illegal State","illegalzip");
+        illegalLocation = new Location(100,"Illegal City","Illegal State","illegalzip");
 
-        Mockito.when(locationRepo.findById(1)).thenReturn(java.util.Optional.of(testLocation));
-        Mockito.when(buildingrepo.save(testBuilding)).thenReturn(testBuilding);
-        Mockito.when(buildingrepo.findAll()).thenReturn(testBuildingList);
-        Mockito.when(buildingrepo.findById(2)).thenReturn(Optional.of(testBuildingList.get(2)));
-        Mockito.when(buildingrepo.findById(100)).thenReturn(Optional.empty());
-        Mockito.when(buildingrepo.findBuildingsByLocationId(illegalLocation.getLocationId())).thenReturn(new ArrayList<Building>());
+    }
+
+    @Test
+    @Order(0)
+    void testMocking() {
+        Mockito.when(buildingrepo.findById(1)).thenReturn(java.util.Optional.of(testBuilding));
+
+        Optional<Building> o = buildingrepo.findById(1);
+        Building l = o.orElse(null);
+        Assertions.assertNotNull(l);
+
+        Assertions.assertNotNull(buildingrepo.findById(1).orElse(null));
     }
 
     @Test
@@ -74,15 +84,19 @@ public class BuildingServiceTests {
     @Test
     @Order(1)
     void create_building_test() {
+        Mockito.when(buildingrepo.save(testBuilding)).thenReturn(testBuilding);
+
         Building building = new Building(0, "123 Created Address", 1);
         building = this.buildingService.createBuilding(building);
         Assertions.assertNotNull(building);
-        Assertions.assertNotEquals(0,building.getBuildingId());
+        Assertions.assertEquals(0,building.getBuildingId());
     }
 
     @Test
     @Order(2)
     void get_all_buildings_test(){
+        Mockito.when(buildingrepo.findAll()).thenReturn(testBuildingList);
+
         List<Building> buildingList = this.buildingService.getAllBuildings();
         Assertions.assertNotNull(buildingList);
         Assertions.assertNotEquals(0,buildingList.size());
@@ -91,11 +105,13 @@ public class BuildingServiceTests {
     @Test
     @Order(3)
     void get_building_by_id_test(){
+        Mockito.when(buildingrepo.findById(1)).thenReturn(Optional.of(testBuilding));
+
         try{
-            int id = 1;
+            int id = testBuilding.getBuildingId();
             Building building = this.buildingService.getBuildingById(id);
             Assertions.assertNotNull(building);
-            Assertions.assertEquals(id, building.getBuildingId());
+            Assertions.assertEquals(1, building.getBuildingId());
 
         }catch(BuildingNotFoundException e){
             Assertions.fail();
@@ -105,23 +121,25 @@ public class BuildingServiceTests {
     @Test
     @Order(4)
     void get_buildings_by_location_test(){
-        List<Building> buildingsByLoc = this.buildingService.getBuildingByLocation(testLocation);
+        int id = testLocation.getLocationId();
+        Mockito.when(buildingrepo.findBuildingsByLocationId(id)).thenReturn(testBuildingList);
+
+        List<Building> buildingsByLoc = this.buildingService.getBuildingByLocation(id);
         Assertions.assertNotNull(buildingsByLoc);
         for (Building b: buildingsByLoc){
-//            Assertions.assertNotNull(b);
-            Assertions.assertEquals(testLocation.getLocationId(),b.getLocationId());
+            Assertions.assertEquals(id,b.getLocationId());
         }
-
-//        Assertions.assertNotNull(testLocation);
-//        Assertions.assertTrue(buildingsByLoc.size()>1);
     }
 
     @Test
     @Order(5)
     void update_building(){
+        Mockito.when(buildingrepo.findById(testBuilding.getBuildingId())).thenReturn(java.util.Optional.of(testBuilding));
+        Mockito.when(buildingrepo.save(testBuilding)).thenReturn(testBuilding);
         try{
-            String updatedAddress = "123 Updated Address";
-            Building building = new Building(2, updatedAddress, testLocation.getLocationId());
+            String updatedAddress = "Updated Address";
+            System.out.println(testBuilding);
+            Building building = new Building(testBuilding.getBuildingId(), updatedAddress, testLocation.getLocationId());
             building = this.buildingService.updateBuilding(building);
             Assertions.assertNotNull(building);
             Assertions.assertEquals(updatedAddress, building.getAddress());
@@ -133,6 +151,8 @@ public class BuildingServiceTests {
     @Test
     @Order(6)
     void get_building_by_id_exception_test(){
+        Mockito.when(buildingrepo.findById(100)).thenReturn(Optional.empty());
+
         try{
             this.buildingService.getBuildingById(100);
             Assertions.fail();
@@ -144,6 +164,9 @@ public class BuildingServiceTests {
     @Test
     @Order(7)
     void update_building_exception_test(){
+        Mockito.when(buildingrepo.findById(100)).thenReturn(Optional.empty());
+        Mockito.when(buildingrepo.save(any())).thenReturn(illegalBuilding);
+
         try{
             this.buildingService.updateBuilding(illegalBuilding);
             Assertions.fail();
@@ -151,5 +174,13 @@ public class BuildingServiceTests {
 
         }
     }
+
+    @Test
+    @Order(8)
+    void delete_building() {
+        Assertions.assertTrue(buildingService.deleteBuildingById(testBuilding.getBuildingId()));
+    }
+
+
 
 }
