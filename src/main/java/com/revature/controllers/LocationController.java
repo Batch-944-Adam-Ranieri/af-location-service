@@ -63,7 +63,7 @@ public class LocationController {
         if(auth==null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
-        }else if(auth == "Authorized") {
+        }else if(auth.equals("Authorized")) {
             try {
                 Location location = locationTransfer(locationDTO);
                 location = locationService.updateLocation(location);
@@ -85,7 +85,7 @@ public class LocationController {
         if(auth ==null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
-        }else if(auth == "Authorized") {
+        }else if(auth.equals("Authorized")) {
 
             Location location = locationService.getLocationById(locationId);
             locationService.deleteLocation(locationId);
