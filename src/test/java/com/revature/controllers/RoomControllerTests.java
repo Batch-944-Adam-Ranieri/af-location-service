@@ -25,6 +25,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -51,10 +53,10 @@ public class RoomControllerTests {
 
     @Test
     void createRoomTest() throws Exception{
-        String json = "{roomId:0, name:testName, type:ONLINE, capacity:10, buildingId:1}";
-        Room room = new Room(0, "testName", RoomType.ONLINE, 10, 1);
+        String json = "{\"roomId\":\"1\", \"name\":\"testName\", \"type\":\"ONLINE\", \"buildingId\":1, \"capacity\":\"5\"}";
+
         Room newRoom = new Room(1, "testName", RoomType.ONLINE, 10, 1);
-        Mockito.when(roomService.createRoom(room)).thenReturn(newRoom);
+        Mockito.when(roomService.createRoom(any())).thenReturn(newRoom);
 
         mvc.perform(MockMvcRequestBuilders
                 .post("/locations/1/buildings/1/rooms")
@@ -94,9 +96,9 @@ public class RoomControllerTests {
     }
     @Test
     void updateRoomTest()throws Exception{
-        String json = "{roomId:1, name:testName, type:ONLINE, capacity:10, buildingId:1}";
+        String json = "{\"roomId\":\"1\", \"name\":\"testName\", \"type\":\"ONLINE\", \"buildingId\":1, \"capacity\":\"10\"}";
         Room newRoom = new Room(1, "testName", RoomType.ONLINE, 10, 1);
-        Mockito.when(roomService.createRoom(newRoom)).thenReturn(newRoom);
+        Mockito.when(roomService.updateRoom(any())).thenReturn(newRoom);
 
         mvc.perform(MockMvcRequestBuilders
                 .put("/locations/1/buildings/1/rooms/1")
@@ -108,7 +110,7 @@ public class RoomControllerTests {
     }
     @Test
     void deleteRoomTest()throws Exception{
-        Mockito.when(roomService.deleteRoom(1)).thenReturn(true);
+        Mockito.when(roomService.deleteRoom(anyInt())).thenReturn(true);
 
         mvc.perform(MockMvcRequestBuilders
                 .delete("/locations/1/buildings/1/rooms/1")
@@ -120,7 +122,7 @@ public class RoomControllerTests {
 
     @Test
     void createRoomForbiddenTest()throws Exception{
-        String json = "{roomId:0, name:testName, type:ONLINE, capacity:10, buildingId:1}";
+        String json = "{\"roomId\":\"1\", \"name\":\"testName\", \"type\":\"ONLINE\", \"buildingId\":1, \"capacity\":\"5\"}";
 
         mvc.perform(MockMvcRequestBuilders
                 .post("/locations/1/buildings/1/rooms")
@@ -132,7 +134,7 @@ public class RoomControllerTests {
     }
     @Test
     void updateRoomForbiddenTest()throws Exception{
-        String json = "{roomId:1, name:testName, type:ONLINE, capacity:10, buildingId:1}";
+        String json = "{\"roomId\":\"1\", \"name\":\"testName\", \"type\":\"ONLINE\", \"buildingId\":1, \"capacity\":\"5\"}";
 
         mvc.perform(MockMvcRequestBuilders
                 .put("/locations/1/buildings/1/rooms/1")
@@ -153,7 +155,7 @@ public class RoomControllerTests {
     }
     @Test
     void createRoomUnauthorizedTest()throws Exception{
-        String json = "{roomId:0, name:testName, type:ONLINE, capacity:10, buildingId:1}";
+        String json = "{\"roomId\":\"1\", \"name\":\"testName\", \"type\":\"ONLINE\", \"buildingId\":1, \"capacity\":\"5\"}";
 
         mvc.perform(MockMvcRequestBuilders
                 .post("/locations/1/buildings/1/rooms")
@@ -164,7 +166,7 @@ public class RoomControllerTests {
     }
     @Test
     void updateRoomUnauthorizedTest()throws Exception{
-        String json = "{roomId:1, name:testName, type:ONLINE, capacity:10, buildingId:1}";
+        String json = "{\"roomId\":\"1\", \"name\":\"testName\", \"type\":\"ONLINE\", \"buildingId\":1, \"capacity\":\"5\"}";
 
         mvc.perform(MockMvcRequestBuilders
                 .put("/locations/1/buildings/1/rooms/1")
@@ -179,7 +181,7 @@ public class RoomControllerTests {
                 .delete("/locations/1/buildings/1/rooms/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
     @Test
     void getRoomNotExistTest()throws Exception{
@@ -191,7 +193,7 @@ public class RoomControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization","Authorized"))
-                .andExpect(status().reason("Room not found"));
+                .andExpect(status().isNotFound());
     }
 //    @Test
 //    void getBuildingNotExistTest()throws Exception{

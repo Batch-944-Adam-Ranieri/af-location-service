@@ -1,5 +1,7 @@
 package com.revature.entities;
 
+import com.revature.dtos.RoomDto;
+
 import javax.persistence.*;
 
 @Entity
@@ -33,6 +35,14 @@ public class Room {
         this.type = type;
         this.capacity = capacity;
         this.buildingId = buildingId;
+    }
+
+    public Room(RoomDto roomDto) {
+        this.roomId = roomDto.getRoomId();
+        this.name = roomDto.getName();
+        this.type = RoomType.valueOf(roomDto.getType());
+        this.capacity = roomDto.getCapacity();
+        this.buildingId = roomDto.getBuildingId();
     }
 
     public int getRoomId() {

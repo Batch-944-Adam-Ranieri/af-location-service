@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,13 +51,14 @@ public class BuildingControllerTests {
 
     @Test
     void createBuildingTest() throws Exception{
-        String json = "{buildingId:0, address:test, locationId:1}";
+        String json = "{\"buildingId\":0, \"address\":\"test\", \"locationId\":1}";
         Building building = new Building(0,"test", 1);
         Building newBuilding = new Building(1,"test", 1);
-        Mockito.when(buildingService.createBuilding(building)).thenReturn(newBuilding);
+        Mockito.when(buildingService.createBuilding(any(Building.class))).thenReturn(new Building());
+//        Mockito.when(buildingService.createBuilding(Mockito.any(Building.class))).then(i-> i.getArguments()[0]);
 
         mvc.perform(MockMvcRequestBuilders
-                .post("/locations/1/buildings/1")
+                .post("/locations/1/buildings")
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -98,7 +100,7 @@ public class BuildingControllerTests {
 
     @Test
     void updateBuildingTest() throws Exception{
-        String json = "{buildingId:1, address:newtest, locationId:1}";
+        String json = "{\"buildingId\":1, \"address\":\"newtest\", \"locationId\":1}";
         Building building = new Building(1,"newtest", 1);
         Mockito.when(buildingService.updateBuilding(building)).thenReturn(building);
 
@@ -125,9 +127,9 @@ public class BuildingControllerTests {
     //without valid authorizations
     @Test
     void createBuildingTestForbidden() throws Exception{
-        String json = "{buildingId:0, address:test, locationId:1}";
+        String json = "{\"buildingId\":0, \"address\":\"test\", \"locationId\":1}";
         mvc.perform(MockMvcRequestBuilders
-                .post("/locations/1/buildings/1")
+                .post("/locations/1/buildings")
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -137,7 +139,7 @@ public class BuildingControllerTests {
 
     @Test
     void updateBuildingTestForbidden() throws Exception{
-        String json = "{buildingId:1, address:newtest, locationId:1}";
+        String json = "{\"buildingId\":1, \"address\":\"newtest\", \"locationId\":1}";
         mvc.perform(MockMvcRequestBuilders
                 .put("/locations/1/buildings/1")
                 .content(json)
@@ -160,9 +162,9 @@ public class BuildingControllerTests {
     //without authorization token
     @Test
     void createBuildingTestUnauthorized() throws Exception{
-        String json = "{buildingId:0, address:test, locationId:1}";
+        String json = "{\"buildingId\":0, \"address\":\"test\", \"locationId\":1}";
         mvc.perform(MockMvcRequestBuilders
-                .post("/locations/1/buildings/1")
+                .post("/locations/1/buildings")
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -171,7 +173,7 @@ public class BuildingControllerTests {
 
     @Test
     void updateBuildingTestUnauthorized() throws Exception{
-        String json = "{buildingId:1, address:newtest, locationId:1}";
+        String json = "{\"buildingId\":1, \"address\":\"newtest\", \"locationId\":1}";
         mvc.perform(MockMvcRequestBuilders
                 .put("/locations/1/buildings/1")
                 .content(json)
@@ -222,7 +224,7 @@ public class BuildingControllerTests {
 
     @Test
     void updateBuildingBuildingDoesNotExistTest() throws Exception{
-        String json = "{buildingId:1000, address:newtest, locationId:1}";
+        String json = "{\"buildingId\":1000, \"address\":\"newtest\", \"locationId\":1}";
         Building building = new Building(1000,"newtest", 1);
         Mockito.when(buildingService.updateBuilding(building)).thenThrow(new BuildingNotFoundException());
 
@@ -232,7 +234,7 @@ public class BuildingControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization","Authorized"))
-                .andExpect(status().reason("Location not found"));
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -282,7 +284,7 @@ public class BuildingControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization","Authorized"))
-                .andExpect(status().reason("Building not found"));
+                .andExpect(status().isNotFound());
     }
 
     @Test
