@@ -192,7 +192,7 @@ public class RoomControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization","Authorized"))
-                .andExpect(status().reason("Room not found"));
+                .andExpect(status().isNotFound());
     }
 //    @Test
 //    void getBuildingNotExistTest()throws Exception{

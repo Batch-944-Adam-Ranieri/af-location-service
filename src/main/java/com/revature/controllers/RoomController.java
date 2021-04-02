@@ -22,10 +22,14 @@ public class RoomController {
     RoomService roomService;
 
     @PostMapping("/locations/{locationId}/buildings/{buildingId}/rooms")
-    public ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto){
-        Room room = new Room(roomDto);
-        room = this.roomService.createRoom(room);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new RoomDto(room));
+    public ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto, @RequestHeader(name = "Authorization") String auth){
+        if(auth.equals("Authorized")) {
+            Room room = new Room(roomDto);
+            room = this.roomService.createRoom(room);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new RoomDto(room));
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @GetMapping("/locations/{locationId}/buildings/{buildingId}/rooms/{roomId}")
