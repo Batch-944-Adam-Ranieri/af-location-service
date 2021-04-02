@@ -52,7 +52,7 @@ public class BuildingServiceImpl implements BuildingService{
             building = op.get();
             System.out.println(building);
         }else{
-            throw new BuildingNotFoundException();
+            throw new BuildingNotFoundException("Building not found");
         }
         return building;
     }

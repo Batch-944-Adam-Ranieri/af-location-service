@@ -2,6 +2,7 @@ package com.revature.entities;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "building")
@@ -70,5 +71,18 @@ public class Building {
                 ", locationId=" + locationId +
                 ", rooms=" + rooms +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Building building = (Building) o;
+        return getBuildingId() == building.getBuildingId() && getLocationId() == building.getLocationId() && Objects.equals(getAddress(), building.getAddress());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getBuildingId(), getAddress(), getLocationId());
     }
 }
