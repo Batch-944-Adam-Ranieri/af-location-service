@@ -6,6 +6,7 @@ import com.revature.exceptions.LocationNotFoundException;
 import com.revature.repos.LocationRepo;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -52,22 +53,8 @@ public class LocationServiceTests {
             }
             testLocationList.add(location);
         }
-
-        illegalLocation = new Location(100,"madison","wi","53704");
-
-//        Mockito.when(locationRepo.findAll()).thenReturn(testLocationList);
-//        Mockito.when(locationRepo.findById(1)).thenReturn(Optional.of(testLocation));
-//        Mockito.when(locationRepo.findById(1).get()).thenReturn(testLocation);
-//        Mockito.when(locationRepo.findById(1)).thenReturn(Optional.empty());
-
-
-        Mockito.when(locationRepo.save(any())).thenReturn(testLocation);
-//        Mockito.when(locationRepo.findById(100)).thenReturn(Optional.empty());
-//        Mockito.when(locationRepo.findById(50)).thenReturn(Optional.empty());
-
-
-
     }
+
     @Order(1)
     @Test
     void testMocking() {
@@ -79,6 +66,7 @@ public class LocationServiceTests {
     @Order(9)
     @Test
     void create_location() {
+        Mockito.when(locationRepo.save(any())).thenReturn(testLocation);
 
         Location location = new Location(5,"Test City","Test State","20033");
         location = locationService.createLocation(location);
@@ -149,6 +137,8 @@ public class LocationServiceTests {
     @Test
     void get_location_by_id_exception_test() {
         Mockito.when(locationRepo.findById(100)).thenReturn(Optional.empty());
+        illegalLocation = new Location(100,"madison","wi","53704");
+
 
         try {
             Location location = locationService.getLocationById(100);
@@ -162,8 +152,10 @@ public class LocationServiceTests {
     @Order(7)
     @Test
     void update_location_exception_test() {
+        illegalLocation = new Location(100,"madison","wi","53704");
         Mockito.when(locationRepo.findById(100)).thenReturn(Optional.empty());
         Mockito.when(locationRepo.save(any())).thenReturn(illegalLocation);
+
         try {
             Location location = locationService.updateLocation(illegalLocation);
             System.out.println(location);

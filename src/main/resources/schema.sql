@@ -15,6 +15,7 @@ CREATE TABLE building (
     loc_id INTEGER NOT NULL,
     PRIMARY KEY (building_id),
     CONSTRAINT loc_bld FOREIGN KEY (loc_id) REFERENCES location(location_id)
+    ON DELETE CASCADE
 );
 CREATE TABLE room (
     room_id INTEGER AUTO_INCREMENT,
@@ -24,4 +25,5 @@ CREATE TABLE room (
     bld_id INTEGER NOT NULL,
     PRIMARY KEY (room_id),
     CONSTRAINT bld_rm FOREIGN KEY (bld_id) REFERENCES building(building_id)
+    ON DELETE CASCADE
 );
