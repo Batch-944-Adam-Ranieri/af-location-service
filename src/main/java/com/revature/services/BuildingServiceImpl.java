@@ -98,7 +98,6 @@ public class BuildingServiceImpl implements BuildingService{
             this.buildingRepo.deleteById(id);
             return true;
         }catch (Exception e){
-            e.printStackTrace();
             return false;
         }
     }

@@ -76,7 +76,6 @@ public class RoomServiceImpl implements RoomService {
             this.roomRepo.deleteById(roomId);
             return true;
         }catch (Exception e){
-            e.printStackTrace();
             return false;
         }    }
 }
