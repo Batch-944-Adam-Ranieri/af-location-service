@@ -52,10 +52,10 @@ class LocationControllerTest {
 
     @Test
     void createLocationTest() throws Exception{
-        String json = "{locationId:0, city:test, state:test,zipcode:test}";
+        String json = "{\"locationId\":\"0\", \"city\":\"test\", \"state\":\"test\", \"zipcode\":\"test\"}";
         Location location = new Location(0,"test","test","test");
         Location newLocation = new Location(1,"test","test","test");
-        Mockito.when(locationService.createLocation(location)).thenReturn(newLocation);
+        Mockito.when(locationService.createLocation(any())).thenReturn(newLocation);
         mvc.perform(MockMvcRequestBuilders
                 .post("/locations")
                 .content(json)
@@ -98,7 +98,7 @@ class LocationControllerTest {
     void updateLocationTest() throws Exception{
         Location location = new Location(12, "newtest", "test", "test");
         Mockito.when(locationService.updateLocation(any(Location.class))).thenReturn(location);
-        String json = "{locationId:12, city:newtest, state:test,zipcode:test}";
+        String json = "{\"locationId\":\"12\", \"city\":\"newtest\", \"state\":\"test\", \"zipcode\":\"test\"}";
         mvc.perform(MockMvcRequestBuilders
                 .put("/locations/12")
                 .content(json)
@@ -121,7 +121,7 @@ class LocationControllerTest {
 
     @Test
     void createLocationTestForbidden() throws Exception{
-        String json = "{locationId:0, city:test, state:test,zipcode:test}";
+        String json = "{\"locationId\":\"0\", \"city\":\"test\", \"state\":\"test\", \"zipcode\":\"test\"}";
         mvc.perform(MockMvcRequestBuilders
                 .post("/locations")
                 .content(json)
@@ -133,7 +133,7 @@ class LocationControllerTest {
 
     @Test
     void updateLocationTestForbidden() throws Exception{
-        String json = "{locationId:12, city:newtest, state:test,zipcode:test}";
+        String json = "{\"locationId\":\"12\", \"city\":\"newtest\", \"state\":\"test\", \"zipcode\":\"test\"}";
         mvc.perform(MockMvcRequestBuilders
                 .put("/locations/12")
                 .content(json)
@@ -155,7 +155,7 @@ class LocationControllerTest {
 
     @Test
     void createLocationTestUnauthorized() throws Exception{
-        String json = "{locationId:0, city:test, state:test,zipcode:test}";
+        String json = "{\"locationId\":\"0\", \"city\":\"test\", \"state\":\"test\", \"zipcode\":\"test\"}";
         mvc.perform(MockMvcRequestBuilders
                 .post("/locations")
                 .content(json)
@@ -166,7 +166,7 @@ class LocationControllerTest {
 
     @Test
     void updateLocationTestUnauthorized() throws Exception{
-        String json = "{locationId:12, city:newtest, state:test,zipcode:test}";
+        String json = "{\"locationId\":\"0\", \"city\":\"test\", \"state\":\"test\", \"zipcode\":\"test\"}";
         mvc.perform(MockMvcRequestBuilders
                 .put("/locations/12")
                 .content(json)
@@ -192,23 +192,23 @@ class LocationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization","Authorized"))
-                .andExpect(status().reason("Location not found"));
+                .andExpect(status().isNotFound());
     }
 
-    @Test //TODO add .equals() for location
+    @Test
 
     void updateLocationTestDoesNotExist() throws Exception{
 
         Location location = new Location(1000, "newtest", "test", "test");
-        String json = "{locationId:1000, city:newtest, state:test,zipcode:test}";
-        Mockito.when(locationService.updateLocation(location)).thenThrow(new LocationNotFoundException());
+        String json = "{\"locationId\":\"12\", \"city\":\"newtest\", \"state\":\"test\", \"zipcode\":\"test\"}";
+        Mockito.when(locationService.updateLocation(any(Location.class))).thenThrow(new LocationNotFoundException());
         mvc.perform(MockMvcRequestBuilders
                 .put("/locations/1000")
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization","Authorized"))
-                .andExpect(status().reason("Location not found"));
+                .andExpect(status().isNotFound());
     }
 
     @Test
