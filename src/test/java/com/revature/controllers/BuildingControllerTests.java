@@ -102,7 +102,7 @@ public class BuildingControllerTests {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization",trainerJwt))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isCreated());
     }
 
@@ -115,7 +115,7 @@ public class BuildingControllerTests {
                 .get("/locations/1/buildings/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isOk());
     }
 
@@ -131,7 +131,7 @@ public class BuildingControllerTests {
                 .get("/locations/1/buildings")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isOk());
 
     }
@@ -149,7 +149,7 @@ public class BuildingControllerTests {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isOk());
     }
 
@@ -160,7 +160,7 @@ public class BuildingControllerTests {
                 .delete("/locations/1/buildings/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isOk());
     }
 
@@ -173,7 +173,7 @@ public class BuildingControllerTests {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Unauthorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isForbidden());
     }
 
@@ -185,7 +185,7 @@ public class BuildingControllerTests {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Unauthorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isForbidden());
     }
 
@@ -195,7 +195,7 @@ public class BuildingControllerTests {
                 .delete("/locations/1/buildings/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Unauthorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isForbidden());
     }
 
@@ -273,7 +273,7 @@ public class BuildingControllerTests {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isNotFound());
     }
 
@@ -285,7 +285,7 @@ public class BuildingControllerTests {
                 .delete("/locations/1000/buildings/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isOk());
     }
 
@@ -297,7 +297,7 @@ public class BuildingControllerTests {
                 .delete("/locations/1/buildings/1000")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isOk());
     }
 
@@ -317,13 +317,13 @@ public class BuildingControllerTests {
     @Test
     void getBuildingByIdBuildingDoesNotExistTest() throws Exception{
 
-        Mockito.when(buildingService.getBuildingById(1)).thenThrow(new BuildingNotFoundException());
+        Mockito.when(buildingService.getBuildingById(1000)).thenThrow(new BuildingNotFoundException());
 
         mvc.perform(MockMvcRequestBuilders
                 .get("/locations/1/buildings/1000")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isNotFound());
     }
 
@@ -336,7 +336,7 @@ public class BuildingControllerTests {
                 .get("/locations/1000/buildings")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isOk());
     }
 
