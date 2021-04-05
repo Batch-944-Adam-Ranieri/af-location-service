@@ -102,7 +102,6 @@ public class BuildingController {
             }
         }
 
-        @Verify
         private Building getBuilding (BuildingDto dto,int locationId){
             Building building = new Building();
             building.setBuildingId(dto.getBuildingId());
