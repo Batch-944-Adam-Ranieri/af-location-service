@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Room.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AF-LocationService</a> &gt; <a href="index.source.html" class="el_package">com.revature.entities</a> &gt; <span class="el_source">Room.java</span></div><h1>Room.java</h1><pre class="source lang-java linenums">package com.revature.entities;
+
+import com.revature.dtos.RoomDto;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = &quot;room&quot;)
+public class Room {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;room_id&quot;)
+    private int roomId;
+
+    @Column(name = &quot;room_name&quot;)
+    private String name;
+
+    @Column(name = &quot;type&quot;)
+    @Enumerated(value = EnumType.STRING)
+    private RoomType type;
+
+    @Column(name = &quot;capacity&quot;)
+    private int capacity;
+
+    @Column(name = &quot;bld_id&quot;)
+    private int buildingId;
+
+<span class="fc" id="L29">    public Room() {</span>
+<span class="fc" id="L30">    }</span>
+
+<span class="nc" id="L32">    public Room(int roomId, String name, RoomType type, int capacity, int buildingId) {</span>
+<span class="nc" id="L33">        this.roomId = roomId;</span>
+<span class="nc" id="L34">        this.name = name;</span>
+<span class="nc" id="L35">        this.type = type;</span>
+<span class="nc" id="L36">        this.capacity = capacity;</span>
+<span class="nc" id="L37">        this.buildingId = buildingId;</span>
+<span class="nc" id="L38">    }</span>
+
+<span class="nc" id="L40">    public Room(RoomDto roomDto) {</span>
+<span class="nc" id="L41">        this.roomId = roomDto.getRoomId();</span>
+<span class="nc" id="L42">        this.name = roomDto.getName();</span>
+<span class="nc" id="L43">        this.type = RoomType.valueOf(roomDto.getType());</span>
+<span class="nc" id="L44">        this.capacity = roomDto.getCapacity();</span>
+<span class="nc" id="L45">        this.buildingId = roomDto.getBuildingId();</span>
+<span class="nc" id="L46">    }</span>
+
+    public int getRoomId() {
+<span class="nc" id="L49">        return roomId;</span>
+    }
+
+    public void setRoomId(int roomId) {
+<span class="nc" id="L53">        this.roomId = roomId;</span>
+<span class="nc" id="L54">    }</span>
+
+    public String getName() {
+<span class="nc" id="L57">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="nc" id="L61">        this.name = name;</span>
+<span class="nc" id="L62">    }</span>
+
+    public RoomType getType() {
+<span class="nc" id="L65">        return type;</span>
+    }
+
+    public void setType(RoomType type) {
+<span class="nc" id="L69">        this.type = type;</span>
+<span class="nc" id="L70">    }</span>
+
+    public int getCapacity() {
+<span class="nc" id="L73">        return capacity;</span>
+    }
+
+    public void setCapacity(int capacity) {
+<span class="nc" id="L77">        this.capacity = capacity;</span>
+<span class="nc" id="L78">    }</span>
+
+    public int getBuildingId() {
+<span class="nc" id="L81">        return buildingId;</span>
+    }
+
+    public void setBuildingId(int buildingId) {
+<span class="nc" id="L85">        this.buildingId = buildingId;</span>
+<span class="nc" id="L86">    }</span>
+
+
+
+    @Override
+    public String toString() {
+<span class="nc" id="L92">        return &quot;Room{&quot; +</span>
+                &quot;roomId=&quot; + roomId +
+                &quot;, name='&quot; + name + '\'' +
+                &quot;, type=&quot; + type +
+                &quot;, capacity=&quot; + capacity +
+                &quot;, buildingId=&quot; + buildingId +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

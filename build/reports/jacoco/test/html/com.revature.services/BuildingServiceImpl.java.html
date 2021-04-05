@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BuildingServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AF-LocationService</a> &gt; <a href="index.source.html" class="el_package">com.revature.services</a> &gt; <span class="el_source">BuildingServiceImpl.java</span></div><h1>BuildingServiceImpl.java</h1><pre class="source lang-java linenums">package com.revature.services;
+
+import com.revature.entities.Building;
+import com.revature.entities.Location;
+import com.revature.exceptions.BuildingNotFoundException;
+import com.revature.exceptions.LocationNotFoundException;
+import com.revature.repos.BuildingRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Component
+@Service
+<span class="nc" id="L18">public class BuildingServiceImpl implements BuildingService{</span>
+
+    @Autowired
+    BuildingRepo buildingRepo;
+
+//    public BuildingServiceImpl() {
+//    }
+//
+//    public BuildingRepo getBuildingRepo() {
+//        return buildingRepo;
+//    }
+//
+//    public void setBuildingRepo(BuildingRepo buildingRepo) {
+//        this.buildingRepo = buildingRepo;
+//    }
+
+    @Override
+    public Building createBuilding(Building building) {
+<span class="nc" id="L36">        building.setBuildingId(0);</span>
+<span class="nc" id="L37">        this.buildingRepo.save(building);</span>
+<span class="nc" id="L38">        return building;</span>
+    }
+
+    @Override
+    public List&lt;Building&gt; getAllBuildings() {
+<span class="nc" id="L43">        return (List&lt;Building&gt;) this.buildingRepo.findAll();</span>
+    }
+
+    @Override
+    public Building getBuildingById(int id) throws BuildingNotFoundException {
+        Building building;
+<span class="nc" id="L49">        Optional&lt;Building&gt; op = buildingRepo.findById(id);</span>
+
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if(op.isPresent()) {</span>
+<span class="nc" id="L52">            building = op.get();</span>
+<span class="nc" id="L53">            System.out.println(building);</span>
+        }else{
+<span class="nc" id="L55">            throw new BuildingNotFoundException(&quot;Building not found&quot;);</span>
+        }
+<span class="nc" id="L57">        return building;</span>
+    }
+
+    @Override
+    public List&lt;Building&gt; getBuildingByLocation(int locationId){
+
+<span class="nc" id="L63">        List&lt;Building&gt; buildings = buildingRepo.findBuildingsByLocationId(locationId);</span>
+
+<span class="nc" id="L65">        return buildings;</span>
+//        if(op.isPresent()) {
+//            location = op.get();
+//            System.out.println(location);
+//        }else{
+//            throw new LocationNotFoundException();
+//        }
+//        return location;
+    }
+
+    @Override
+    public Building updateBuilding(Building building) throws BuildingNotFoundException {
+
+<span class="nc" id="L78">        Optional&lt;Building&gt; op = buildingRepo.findById(building.getBuildingId());</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (!op.isPresent())</span>
+<span class="nc" id="L80">            throw new BuildingNotFoundException();</span>
+<span class="nc" id="L81">        Building oldBuilding = op.get();</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (building.getAddress() != null)</span>
+<span class="nc" id="L83">            oldBuilding.setAddress(building.getAddress());</span>
+<span class="nc" id="L84">        Building updatedBuilding = buildingRepo.save(oldBuilding);</span>
+<span class="nc" id="L85">        return updatedBuilding;</span>
+    }
+
+    @Override
+    public boolean deleteBuildingById(int id) {
+//        try{
+//            this.buildingRepo.delete(this.buildingRepo.findById(id).orElse(null));
+//            return true;
+//        }catch(Exception e){
+//            e.printStackTrace();
+//            return false;
+//        }
+        try {
+<span class="nc" id="L98">            this.buildingRepo.deleteById(id);</span>
+<span class="nc" id="L99">            return true;</span>
+<span class="nc" id="L100">        }catch (Exception e){</span>
+<span class="nc" id="L101">            return false;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LocationServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AF-LocationService</a> &gt; <a href="index.source.html" class="el_package">com.revature.services</a> &gt; <span class="el_source">LocationServiceImpl.java</span></div><h1>LocationServiceImpl.java</h1><pre class="source lang-java linenums">package com.revature.services;
+
+
+import com.revature.entities.Location;
+import com.revature.exceptions.LocationNotFoundException;
+import com.revature.repos.LocationRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Component
+@Service
+<span class="fc" id="L16">public class LocationServiceImpl implements LocationService{</span>
+
+    @Autowired
+    LocationRepo locationRepo;
+
+//    public LocationServiceImpl() {
+//    }
+//
+//    public LocationRepo getLocationRepo() {
+//
+//        return locationRepo;
+//    }
+//
+//    public void setLocationRepo(LocationRepo locationRepo) {
+//        this.locationRepo = locationRepo;
+//    }
+
+    @Override
+    public Location createLocation(Location location) {
+<span class="nc" id="L35">        location.setLocationId(0);</span>
+<span class="nc" id="L36">        this.locationRepo.save(location);</span>
+<span class="nc" id="L37">        return location;</span>
+    }
+
+    @Override
+    public Location getLocationById(int id) throws LocationNotFoundException {
+
+        Location location;
+<span class="nc" id="L44">        Optional&lt;Location&gt; op = locationRepo.findById(id);</span>
+
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        if(op.isPresent()) {</span>
+<span class="nc" id="L47">            location = op.get();</span>
+<span class="nc" id="L48">            System.out.println(location);</span>
+        }else{
+<span class="nc" id="L50">            throw new LocationNotFoundException();</span>
+        }
+<span class="nc" id="L52">        return location;</span>
+
+//        return location;
+    }
+
+
+    @Override
+    public List&lt;Location&gt; getAllLocations() {
+
+<span class="nc" id="L61">        return (List&lt;Location&gt;) this.locationRepo.findAll();</span>
+    }
+
+    @Override
+    public Location updateLocation(Location location) throws LocationNotFoundException {
+
+<span class="nc" id="L67">        Optional&lt;Location&gt; op = locationRepo.findById(location.getLocationId());</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (!op.isPresent())</span>
+<span class="nc" id="L69">            throw new LocationNotFoundException();</span>
+<span class="nc" id="L70">        Location oldLocation = op.get();</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        if (location.getCity() != null)</span>
+<span class="nc" id="L72">            oldLocation.setCity(location.getCity());</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (location.getState() != null)</span>
+<span class="nc" id="L74">            oldLocation.setState(location.getState());</span>
+<span class="nc" id="L75">        Location updatedLocation = locationRepo.save(oldLocation);</span>
+<span class="nc" id="L76">        return updatedLocation;</span>
+    }
+
+    @Override
+    public boolean deleteLocation(int id) {
+
+        try{
+<span class="nc" id="L83">            this.locationRepo.deleteById(id);</span>
+<span class="nc" id="L84">            return true;</span>
+<span class="nc" id="L85">        }catch(Exception e){</span>
+<span class="nc" id="L86">            return false;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

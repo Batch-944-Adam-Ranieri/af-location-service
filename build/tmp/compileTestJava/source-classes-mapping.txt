@@ -1,0 +1,22 @@
+com/revature/AFLocationService/AfLocationServiceApplicationTests.java
+ com.revature.AFLocationService.AfLocationServiceApplicationTests
+com/revature/services/LocationServiceTests.java
+ com.revature.services.LocationServiceTests
+com/revature/repos/LocationRepoTests.java
+ com.revature.repos.LocationRepoTests
+com/revature/AFLocationService/InitialLoadIntegrationTest.java
+ com.revature.AFLocationService.InitialLoadIntegrationTest
+com/revature/repos/RoomRepoTests.java
+ com.revature.repos.RoomRepoTests
+com/revature/services/BuildingServiceTests.java
+ com.revature.services.BuildingServiceTests
+com/revature/services/RoomServiceTests.java
+ com.revature.services.RoomServiceTests
+com/revature/repos/BuildingRepoTests.java
+ com.revature.repos.BuildingRepoTests
+com/revature/controllers/BuildingControllerTests.java
+ com.revature.controllers.BuildingControllerTests
+com/revature/controllers/LocationControllerTest.java
+ com.revature.controllers.LocationControllerTest
+com/revature/controllers/RoomControllerTests.java
+ com.revature.controllers.RoomControllerTests

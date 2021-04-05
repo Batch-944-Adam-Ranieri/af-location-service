@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LocationDto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AF-LocationService</a> &gt; <a href="index.source.html" class="el_package">com.revature.dtos</a> &gt; <span class="el_source">LocationDto.java</span></div><h1>LocationDto.java</h1><pre class="source lang-java linenums">package com.revature.dtos;
+
+import com.revature.entities.Building;
+
+import java.util.List;
+
+public class LocationDto {
+
+    private int locationId;
+    private String city;
+    private String state;
+    private String zipcode;
+    private List&lt;Building&gt; buildings;
+
+<span class="nc" id="L15">    public LocationDto() {</span>
+<span class="nc" id="L16">    }</span>
+
+<span class="nc" id="L18">    public LocationDto(int locationId, String city, String state, String zipcode, List&lt;Building&gt; buildings) {</span>
+<span class="nc" id="L19">        this.locationId = locationId;</span>
+<span class="nc" id="L20">        this.city = city;</span>
+<span class="nc" id="L21">        this.state = state;</span>
+<span class="nc" id="L22">        this.zipcode = zipcode;</span>
+<span class="nc" id="L23">        this.buildings = buildings;</span>
+<span class="nc" id="L24">    }</span>
+
+    public int getLocationId() {
+<span class="nc" id="L27">        return locationId;</span>
+    }
+
+    public void setLocationId(int locationId) {
+<span class="nc" id="L31">        this.locationId = locationId;</span>
+<span class="nc" id="L32">    }</span>
+
+    public String getCity() {
+<span class="nc" id="L35">        return city;</span>
+    }
+
+    public void setCity(String city) {
+<span class="nc" id="L39">        this.city = city;</span>
+<span class="nc" id="L40">    }</span>
+
+    public String getState() {
+<span class="nc" id="L43">        return state;</span>
+    }
+
+    public void setState(String state) {
+<span class="nc" id="L47">        this.state = state;</span>
+<span class="nc" id="L48">    }</span>
+
+    public String getZipcode() {
+<span class="nc" id="L51">        return zipcode;</span>
+    }
+
+    public void setZipcode(String zipcode) {
+<span class="nc" id="L55">        this.zipcode = zipcode;</span>
+<span class="nc" id="L56">    }</span>
+
+    public List&lt;Building&gt; getBuildings() {
+<span class="nc" id="L59">        return buildings;</span>
+    }
+
+    public void setBuildings(List&lt;Building&gt; buildings) {
+<span class="nc" id="L63">        this.buildings = buildings;</span>
+<span class="nc" id="L64">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L68">        return &quot;LocationDto{&quot; +</span>
+                &quot;locationId=&quot; + locationId +
+                &quot;, city='&quot; + city + '\'' +
+                &quot;, state='&quot; + state + '\'' +
+                &quot;, zipcode='&quot; + zipcode + '\'' +
+                &quot;, buildings=&quot; + buildings +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

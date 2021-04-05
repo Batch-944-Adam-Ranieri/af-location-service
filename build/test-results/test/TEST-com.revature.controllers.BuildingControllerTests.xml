@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.revature.controllers.BuildingControllerTests" tests="16" skipped="0" failures="0" errors="0" timestamp="2021-04-05T15:10:57" hostname="DESKTOP-422FLEC" time="1.42">
+  <properties/>
+  <testcase name="deleteBuildingLocationDoesNotExistTest()" classname="com.revature.controllers.BuildingControllerTests" time="0.688"/>
+  <testcase name="updateBuildingTest()" classname="com.revature.controllers.BuildingControllerTests" time="0.224"/>
+  <testcase name="deleteBuildingTestForbidden()" classname="com.revature.controllers.BuildingControllerTests" time="0.019"/>
+  <testcase name="deleteBuildingBuildingDoesNotExistTest()" classname="com.revature.controllers.BuildingControllerTests" time="0.022"/>
+  <testcase name="createBuildingTestUnauthorized()" classname="com.revature.controllers.BuildingControllerTests" time="0.023"/>
+  <testcase name="updateBuildingBuildingDoesNotExistTest()" classname="com.revature.controllers.BuildingControllerTests" time="0.026"/>
+  <testcase name="getAllBuildingsDoesNotExist()" classname="com.revature.controllers.BuildingControllerTests" time="0.02"/>
+  <testcase name="createBuildingTestForbidden()" classname="com.revature.controllers.BuildingControllerTests" time="0.031"/>
+  <testcase name="deleteBuildingTestUnauthorized()" classname="com.revature.controllers.BuildingControllerTests" time="0.07"/>
+  <testcase name="getAllBuildingsOfLocationTest()" classname="com.revature.controllers.BuildingControllerTests" time="0.023"/>
+  <testcase name="createBuildingTest()" classname="com.revature.controllers.BuildingControllerTests" time="0.059"/>
+  <testcase name="getBuildingByIdTest()" classname="com.revature.controllers.BuildingControllerTests" time="0.038"/>
+  <testcase name="getBuildingByIdBuildingDoesNotExistTest()" classname="com.revature.controllers.BuildingControllerTests" time="0.044"/>
+  <testcase name="updateBuildingTestForbidden()" classname="com.revature.controllers.BuildingControllerTests" time="0.035"/>
+  <testcase name="updateBuildingTestUnauthorized()" classname="com.revature.controllers.BuildingControllerTests" time="0.042"/>
+  <testcase name="deleteBuildingTest()" classname="com.revature.controllers.BuildingControllerTests" time="0.036"/>
+  <system-out><![CDATA[10:10:37.310 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+10:10:37.371 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+10:10:37.484 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [com.revature.controllers.BuildingControllerTests] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
+10:10:37.541 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.revature.controllers.BuildingControllerTests], using SpringBootContextLoader
+10:10:37.572 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.revature.controllers.BuildingControllerTests]: class path resource [com/revature/controllers/BuildingControllerTests-context.xml] does not exist
+10:10:37.577 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.revature.controllers.BuildingControllerTests]: class path resource [com/revature/controllers/BuildingControllerTestsContext.groovy] does not exist
+10:10:37.579 [Test worker] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.revature.controllers.BuildingControllerTests]: no resource found for suffixes {-context.xml, Context.groovy}.
+10:10:37.876 [Test worker] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [com.revature.controllers.BuildingControllerTests]
+10:10:38.519 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [com.revature.controllers.BuildingControllerTests]: using defaults.
+10:10:38.521 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+10:10:38.631 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@4868a904, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@1e1caf70, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@1f44bdd8, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@38c90b92, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@3564b506, org.springframework.test.context.support.DirtiesContextTestExecutionListener@4e78fbf5, org.springframework.test.context.transaction.TransactionalTestExecutionListener@74e8259f, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@48d250b, org.springframework.test.context.event.EventPublishingTestExecutionListener@14517c19, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@1d7f9a35, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@288e80d8, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@45c65dbf, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@5a6840aa, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@3b27c7e0, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@67f3081c]
+10:10:38.753 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.4.4)
+
+2021-04-05 10:10:40.195  INFO 17384 --- [    Test worker] c.r.controllers.BuildingControllerTests  : Starting BuildingControllerTests using Java 15.0.1 on DESKTOP-422FLEC with PID 17384 (started by patty in C:\Users\patty\Desktop\af-location-service)
+2021-04-05 10:10:40.250  INFO 17384 --- [    Test worker] c.r.controllers.BuildingControllerTests  : No active profile set, falling back to default profiles: default
+2021-04-05 10:10:42.412  INFO 17384 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode!
+2021-04-05 10:10:42.414  INFO 17384 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-04-05 10:10:42.633  INFO 17384 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 194 ms. Found 3 JPA repository interfaces.
+2021-04-05 10:10:43.248  INFO 17384 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode!
+2021-04-05 10:10:43.250  INFO 17384 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2021-04-05 10:10:43.259  INFO 17384 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 7 ms. Found 0 JDBC repository interfaces.
+2021-04-05 10:10:46.403  INFO 17384 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-04-05 10:10:47.775  INFO 17384 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-04-05 10:10:48.773  INFO 17384 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-04-05 10:10:48.977  INFO 17384 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.29.Final
+2021-04-05 10:10:49.214  INFO 17384 --- [    Test worker] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-04-05 10:10:49.952  INFO 17384 --- [    Test worker] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2021-04-05 10:10:52.112  INFO 17384 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-04-05 10:10:52.145  INFO 17384 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-04-05 10:10:55.021  WARN 17384 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-04-05 10:10:56.114  INFO 17384 --- [    Test worker] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-04-05 10:10:56.325  INFO 17384 --- [    Test worker] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2021-04-05 10:10:57.749  INFO 17384 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2021-04-05 10:10:57.750  INFO 17384 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2021-04-05 10:10:57.755  INFO 17384 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 4 ms
+2021-04-05 10:10:57.814  INFO 17384 --- [    Test worker] c.r.controllers.BuildingControllerTests  : Started BuildingControllerTests in 19.037 seconds (JVM running for 24.877)
+ INFO [Test worker] (LoggingAspect.java:18) - Attempting incoming request: execution(ResponseEntity com.revature.controllers.BuildingController.deleteBuilding(int,int,String))
+ INFO [Test worker] (LoggingAspect.java:24) - Completed request: execution(ResponseEntity com.revature.controllers.BuildingController.deleteBuilding(int,int,String))
+ INFO [Test worker] (LoggingAspect.java:18) - Attempting incoming request: execution(ResponseEntity com.revature.controllers.BuildingController.updateBuilding(int,int,BuildingDto,String))
+ INFO [Test worker] (LoggingAspect.java:24) - Completed request: execution(ResponseEntity com.revature.controllers.BuildingController.updateBuilding(int,int,BuildingDto,String))
+ INFO [Test worker] (LoggingAspect.java:18) - Attempting incoming request: execution(ResponseEntity com.revature.controllers.BuildingController.deleteBuilding(int,int,String))
+ INFO [Test worker] (LoggingAspect.java:24) - Completed request: execution(ResponseEntity com.revature.controllers.BuildingController.deleteBuilding(int,int,String))
+ INFO [Test worker] (LoggingAspect.java:18) - Attempting incoming request: execution(ResponseEntity com.revature.controllers.BuildingController.deleteBuilding(int,int,String))
+ INFO [Test worker] (LoggingAspect.java:24) - Completed request: execution(ResponseEntity com.revature.controllers.BuildingController.deleteBuilding(int,int,String))
+ INFO [Test worker] (LoggingAspect.java:18) - Attempting incoming request: execution(ResponseEntity com.revature.controllers.BuildingController.createBuilding(int,BuildingDto,String))
+ INFO [Test worker] (LoggingAspect.java:24) - Completed request: execution(ResponseEntity com.revature.controllers.BuildingController.createBuilding(int,BuildingDto,String))
+ INFO [Test worker] (LoggingAspect.java:18) - Attempting incoming request: execution(ResponseEntity com.revature.controllers.BuildingController.updateBuilding(int,int,BuildingDto,String))
+ INFO [Test worker] (LoggingAspect.java:24) - Completed request: execution(ResponseEntity com.revature.controllers.BuildingController.updateBuilding(int,int,BuildingDto,String))
+ INFO [Test worker] (LoggingAspect.java:18) - Attempting incoming request: execution(ResponseEntity com.revature.controllers.BuildingController.getAllBuildings(int,String))
+ INFO [Test worker] (LoggingAspect.java:24) - Completed request: execution(ResponseEntity com.revature.controllers.BuildingController.getAllBuildings(int,String))
+ INFO [Test worker] (LoggingAspect.java:18) - Attempting incoming request: execution(ResponseEntity com.revature.controllers.BuildingController.createBuilding(int,BuildingDto,String))
+ INFO [Test worker] (LoggingAspect.java:24) - Completed request: execution(ResponseEntity com.revature.controllers.BuildingController.createBuilding(int,BuildingDto,String))
+ INFO [Test worker] (LoggingAspect.java:18) - Attempting incoming request: execution(ResponseEntity com.revature.controllers.BuildingController.deleteBuilding(int,int,String))
+ INFO [Test worker] (LoggingAspect.java:24) - Completed request: execution(ResponseEntity com.revature.controllers.BuildingController.deleteBuilding(int,int,String))
+ INFO [Test worker] (LoggingAspect.java:18) - Attempting incoming request: execution(ResponseEntity com.revature.controllers.BuildingController.getAllBuildings(int,String))
+ INFO [Test worker] (LoggingAspect.java:24) - Completed request: execution(ResponseEntity com.revature.controllers.BuildingController.getAllBuildings(int,String))
+ INFO [Test worker] (LoggingAspect.java:18) - Attempting incoming request: execution(ResponseEntity com.revature.controllers.BuildingController.createBuilding(int,BuildingDto,String))
+ INFO [Test worker] (LoggingAspect.java:24) - Completed request: execution(ResponseEntity com.revature.controllers.BuildingController.createBuilding(int,BuildingDto,String))
+ INFO [Test worker] (LoggingAspect.java:18) - Attempting incoming request: execution(ResponseEntity com.revature.controllers.BuildingController.getBuildingById(int,int,String))
+ INFO [Test worker] (LoggingAspect.java:24) - Completed request: execution(ResponseEntity com.revature.controllers.BuildingController.getBuildingById(int,int,String))
+ INFO [Test worker] (LoggingAspect.java:18) - Attempting incoming request: execution(ResponseEntity com.revature.controllers.BuildingController.getBuildingById(int,int,String))
+ INFO [Test worker] (LoggingAspect.java:24) - Completed request: execution(ResponseEntity com.revature.controllers.BuildingController.getBuildingById(int,int,String))
+ INFO [Test worker] (LoggingAspect.java:18) - Attempting incoming request: execution(ResponseEntity com.revature.controllers.BuildingController.updateBuilding(int,int,BuildingDto,String))
+ INFO [Test worker] (LoggingAspect.java:24) - Completed request: execution(ResponseEntity com.revature.controllers.BuildingController.updateBuilding(int,int,BuildingDto,String))
+ INFO [Test worker] (LoggingAspect.java:18) - Attempting incoming request: execution(ResponseEntity com.revature.controllers.BuildingController.updateBuilding(int,int,BuildingDto,String))
+ INFO [Test worker] (LoggingAspect.java:24) - Completed request: execution(ResponseEntity com.revature.controllers.BuildingController.updateBuilding(int,int,BuildingDto,String))
+ INFO [Test worker] (LoggingAspect.java:18) - Attempting incoming request: execution(ResponseEntity com.revature.controllers.BuildingController.deleteBuilding(int,int,String))
+ INFO [Test worker] (LoggingAspect.java:24) - Completed request: execution(ResponseEntity com.revature.controllers.BuildingController.deleteBuilding(int,int,String))
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
