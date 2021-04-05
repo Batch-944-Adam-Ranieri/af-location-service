@@ -22,8 +22,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Field;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -46,8 +46,43 @@ public class RoomControllerTests {
     @MockBean
     RoomService roomService;
 
+    static String trainerJwt;
+    static String adminJwt;
+
+    protected static void setEnv(Map<String, String> newenv) throws Exception {
+        try {
+            Class<?> processEnvironmentClass = Class.forName("java.lang.ProcessEnvironment");
+            Field theEnvironmentField = processEnvironmentClass.getDeclaredField("theEnvironment");
+            theEnvironmentField.setAccessible(true);
+            Map<String, String> env = (Map<String, String>) theEnvironmentField.get(null);
+            env.putAll(newenv);
+            Field theCaseInsensitiveEnvironmentField = processEnvironmentClass.getDeclaredField("theCaseInsensitiveEnvironment");
+            theCaseInsensitiveEnvironmentField.setAccessible(true);
+            Map<String, String> cienv = (Map<String, String>)     theCaseInsensitiveEnvironmentField.get(null);
+            cienv.putAll(newenv);
+        } catch (NoSuchFieldException e) {
+            Class[] classes = Collections.class.getDeclaredClasses();
+            Map<String, String> env = System.getenv();
+            for(Class cl : classes) {
+                if("java.util.Collections$UnmodifiableMap".equals(cl.getName())) {
+                    Field field = cl.getDeclaredField("m");
+                    field.setAccessible(true);
+                    Object obj = field.get(env);
+                    Map<String, String> map = (Map<String, String>) obj;
+                    map.clear();
+                    map.putAll(newenv);
+                }
+            }
+        }
+    }
+
     @BeforeAll
-    void setUp(){
+    static void setUp() throws Exception {
+        Map<String, String> authserver = new HashMap<>();
+        authserver.put("AUTH_SERVER", "http://35.232.107.40:8080");
+        setEnv(authserver);
+        trainerJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoidHJhaW5lciIsImlkIjo5LCJlbWFpbCI6InBvc3RtYW4udGVzdEBlbWFpbC5jb20ifQ.ho14xAMZkwH-RUMWcrEPwyFXOHVMbIY992o5B14EpQA";
+        adminJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJpZCI6MjMsImVtYWlsIjoibGNhcnJpY284MjdAZ21haWwuY29tIn0.lrI1-a3CfLb-nVeHZ9BJBHJ1MN2RHezl8DyP8J4GM8A";
 
     }
 
@@ -63,7 +98,7 @@ public class RoomControllerTests {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isCreated());
     }
     @Test
@@ -75,7 +110,7 @@ public class RoomControllerTests {
                 .get("/locations/1/buildings/1/rooms/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isOk());
     }
     @Test
@@ -91,7 +126,7 @@ public class RoomControllerTests {
                 .get("/locations/1/buildings/1/rooms")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isOk());
     }
     @Test
@@ -105,7 +140,7 @@ public class RoomControllerTests {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isOk());
     }
     @Test
@@ -116,7 +151,7 @@ public class RoomControllerTests {
                 .delete("/locations/1/buildings/1/rooms/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isOk());
     }
 
@@ -129,7 +164,7 @@ public class RoomControllerTests {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Unauthorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isForbidden());
     }
     @Test
@@ -141,7 +176,7 @@ public class RoomControllerTests {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Unauthorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isForbidden());
     }
     @Test
@@ -150,7 +185,7 @@ public class RoomControllerTests {
                 .delete("/locations/1/buildings/1/rooms/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Unauthorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isForbidden());
     }
     @Test
@@ -192,7 +227,7 @@ public class RoomControllerTests {
                 .get("/locations/1/buildings/1/rooms/1000")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isNotFound());
     }
 //    @Test
@@ -214,7 +249,7 @@ public class RoomControllerTests {
                 .get("/locations/1/buildings/1000/rooms")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isOk());
     }
 
