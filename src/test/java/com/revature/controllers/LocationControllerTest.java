@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import com.revature.AFLocationService.AfLocationServiceApplication;
+import com.revature.dtos.UserDto;
 import com.revature.entities.Location;
 import com.revature.exceptions.LocationNotFoundException;
 import com.revature.services.LocationService;
@@ -86,7 +87,6 @@ class LocationControllerTest {
         setEnv(authserver);
         trainerJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoidHJhaW5lciIsImlkIjo5LCJlbWFpbCI6InBvc3RtYW4udGVzdEBlbWFpbC5jb20ifQ.ho14xAMZkwH-RUMWcrEPwyFXOHVMbIY992o5B14EpQA";
         adminJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJpZCI6MjMsImVtYWlsIjoibGNhcnJpY284MjdAZ21haWwuY29tIn0.lrI1-a3CfLb-nVeHZ9BJBHJ1MN2RHezl8DyP8J4GM8A";
-
     }
 
     @Test
@@ -100,7 +100,7 @@ class LocationControllerTest {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isCreated());
     }
 
@@ -112,7 +112,7 @@ class LocationControllerTest {
                 .get("/locations/12")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isOk());
     }
 
@@ -129,7 +129,7 @@ class LocationControllerTest {
                 .get("/locations")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isOk());
     }
 
@@ -143,7 +143,7 @@ class LocationControllerTest {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isOk());
     }
 
@@ -154,7 +154,7 @@ class LocationControllerTest {
                 .delete("/locations/12")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isOk());
     }
 
@@ -166,7 +166,7 @@ class LocationControllerTest {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Unauthorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isForbidden());
     }
 
@@ -178,7 +178,7 @@ class LocationControllerTest {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Unauthorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isForbidden());
     }
 
@@ -188,7 +188,7 @@ class LocationControllerTest {
                 .delete("/locations/12")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Unauthorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isForbidden());
     }
 
@@ -230,7 +230,7 @@ class LocationControllerTest {
                 .get("/locations/1000")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",trainerJwt))
                 .andExpect(status().isNotFound());
     }
 
@@ -246,7 +246,7 @@ class LocationControllerTest {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isNotFound());
     }
 
@@ -257,7 +257,7 @@ class LocationControllerTest {
                 .delete("/locations/1000")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization","Authorized"))
+                .header("Authorization",adminJwt))
                 .andExpect(status().isOk());
     }
 

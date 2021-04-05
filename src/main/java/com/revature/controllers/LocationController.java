@@ -3,6 +3,7 @@ package com.revature.controllers;
 
 import com.revature.aspects.Verify;
 import com.revature.dtos.LocationDto;
+import com.revature.dtos.UserDto;
 import com.revature.entities.Location;
 import com.revature.exceptions.LocationNotFoundException;
 import com.revature.services.LocationService;
@@ -24,80 +25,76 @@ public class LocationController {
 
     @Verify
     @PostMapping("/locations")
-    public ResponseEntity<Location> createLocation(@RequestBody LocationDto locationDTO,@RequestHeader(name = "Authorization",required = false) String auth) {
-
-        if(auth == null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else if(auth.equals("Authorized")) {
+    public ResponseEntity<Location> createLocation(UserDto userDto, @RequestBody LocationDto locationDTO, @RequestHeader(name = "Authorization", required = false) String auth) {
+        if (userDto.getRole().equals("admin")) {
             Location location = locationTransfer(locationDTO);
             location.setLocationId(0);
-
             locationService.createLocation(location);
-
-            return ResponseEntity.status(201).body(location);
-        }else{
+            return ResponseEntity.status(HttpStatus.CREATED).body(location);
+        } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
+
     @Verify
     @GetMapping("/locations")
-    public ResponseEntity<List<Location>> getAllLocations(){
+    public ResponseEntity<List<Location>> getAllLocations(UserDto userDto, @RequestHeader(name = "Authorization", required = false) String auth) {
 
         List<Location> locations = locationService.getAllLocations();
-        return ResponseEntity.status(200).body(locations);
+        return ResponseEntity.status(HttpStatus.OK).body(locations);
     }
+
     @Verify
     @GetMapping("/locations/{locationId}")
-    public ResponseEntity<Location> getLocationById(@PathVariable int locationId) throws LocationNotFoundException {
+    public ResponseEntity<Location> getLocationById(UserDto userDto, @PathVariable int locationId) throws LocationNotFoundException {
         try {
             Location location = locationService.getLocationById(locationId);
-            return ResponseEntity.status(200).body(location);
-        }catch(LocationNotFoundException e){
+            return ResponseEntity.status(HttpStatus.OK).body(location);
+        } catch (LocationNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
     @Verify
     @PutMapping("/locations/{locationId}")
-    public ResponseEntity<Location> updateLocation(@RequestBody LocationDto locationDTO,
+    public ResponseEntity<Location> updateLocation(UserDto userDto,
+                                                   @RequestBody LocationDto locationDTO,
                                                    @PathVariable int locationId,
-                                                   @RequestHeader(name = "Authorization",required = false) String auth) throws LocationNotFoundException {
-        if(auth==null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                                                   @RequestHeader(name = "Authorization", required = false) String auth) throws LocationNotFoundException {
 
-        }else if(auth.equals("Authorized")) {
+        if (userDto.getRole().equals("admin")) {
             try {
                 Location location = locationTransfer(locationDTO);
                 location = locationService.updateLocation(location);
-                return ResponseEntity.status(200).body(location);
-            }catch(LocationNotFoundException e){
+                return ResponseEntity.status(HttpStatus.OK).body(location);
+            } catch (LocationNotFoundException e) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
             }
-        }else{
-
+        } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-
         }
     }
+
     @Verify
     @DeleteMapping("/locations/{locationId}")
-    public ResponseEntity<String> deleteLocation(@PathVariable int locationId,@RequestHeader(name="Authorization",required = false) String auth) throws LocationNotFoundException {
+    public ResponseEntity<String> deleteLocation(UserDto userDto, @PathVariable int locationId, @RequestHeader(name = "Authorization", required = false) String auth) {
 
-        if(auth ==null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
-        }else if(auth.equals("Authorized")) {
-
-            Location location = locationService.getLocationById(locationId);
-            locationService.deleteLocation(locationId);
-            return ResponseEntity.status(200).body("Deleted location");
-        }else{
+        if (userDto.getRole().equals("admin")) {
+            try {
+                Location location = locationService.getLocationById(locationId);
+                locationService.deleteLocation(locationId);
+                return ResponseEntity.status(HttpStatus.OK).body("Deleted location");
+            } catch (LocationNotFoundException e) {
+                return ResponseEntity.status(HttpStatus.OK).build();
+            }
+        } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
         }
     }
 
-    public Location locationTransfer(LocationDto locationDTO){
+    public Location locationTransfer(LocationDto locationDTO) {
         Location location = new Location();
         location.setCity(locationDTO.getCity());
         location.setState(locationDTO.getState());

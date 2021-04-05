@@ -51,7 +51,7 @@ public class SecurityAspect {
                 logger.info("JWT verified: " + userDTO);
                 Object[] args = pjp.getArgs();
                 args[0] = userDTO;
-                Object obj = pjp.proceed();
+                Object obj = pjp.proceed(args);
                 return obj;
             }
         }catch(Exception e){
