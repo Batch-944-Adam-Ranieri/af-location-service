@@ -3,6 +3,7 @@ package com.revature.controllers;
 
 import com.revature.aspects.Verify;
 import com.revature.dtos.BuildingDto;
+import com.revature.dtos.UserDto;
 import com.revature.entities.Building;
 import com.revature.exceptions.BuildingNotFoundException;
 import com.revature.services.BuildingService;
@@ -23,20 +24,27 @@ public class BuildingController {
     @Autowired
     BuildingService buildingService;
 
-    @PostMapping("/locations/{locationId}/buildings")
-    public ResponseEntity<Building> createBuilding(@PathVariable int locationId, @RequestBody BuildingDto buildingDTO, @RequestHeader(name = "Authorization", required = false) String auth){
+    UserDto userDto;
 
-        if (auth == null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
-        else if(auth.equals("Authorized")){
+    @Verify
+    @PostMapping("/locations/{locationId}/buildings")
+    public ResponseEntity<Building> createBuilding(@PathVariable int locationId, @RequestBody BuildingDto buildingDTO, UserDto userDto){
+
+//        if (auth == null){
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+//        }
+//        else if(auth.equals("Authorized")){
+//            Building building = getBuilding(buildingDTO, locationId);
+//            this.buildingService.createBuilding(building);
+//            return ResponseEntity.status(HttpStatus.CREATED).body(building);
+//        }
+//        else{
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+//        }
             Building building = getBuilding(buildingDTO, locationId);
             this.buildingService.createBuilding(building);
             return ResponseEntity.status(HttpStatus.CREATED).body(building);
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-        }
+
     }
     @Verify
     @GetMapping("/locations/{locationId}/buildings")
