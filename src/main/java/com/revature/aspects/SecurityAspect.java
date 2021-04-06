@@ -1,12 +1,14 @@
 
 package com.revature.aspects;
 
+import com.revature.config.WebClientBuilder;
 import com.revature.dtos.UserDto;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -22,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 public class SecurityAspect {
     private Logger logger = Logger.getLogger(SecurityAspect.class);
 
+    @Autowired
+    private WebClient.Builder webClientBuilder;
     public static String getEnv(String key) {
         return System.getenv(key);
     }
