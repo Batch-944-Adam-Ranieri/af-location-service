@@ -1,10 +1,13 @@
 package com.revature.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.context.annotation.Lazy;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="location")
+@Table(name="location_")
 public class Location {
 
     @Id
@@ -20,6 +23,7 @@ public class Location {
     @Column(name = "zipcode",nullable = false)
     private String zipcode;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "locationId")
     private List<Building> buildings;
 

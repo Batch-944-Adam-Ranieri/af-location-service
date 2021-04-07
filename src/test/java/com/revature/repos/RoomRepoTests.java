@@ -68,9 +68,17 @@ public class RoomRepoTests {
         for(Room room: rooms){
             Assertions.assertEquals(RoomType.VIRTUAL, room.getType());
         }
-        Assertions.assertTrue(rooms.size() > 7);
+        Assertions.assertTrue(rooms.size() > 1);
     }
 
+    @Test
+    void get_rooms_by_building_id(){
+        int id = 3;
+        List<Room> rooms = roomRepo.findRoomByBuildingId(id);
+        for(Room r: rooms) {
+            Assertions.assertEquals(3, r.getBuildingId());
+        }
+    }
     @Test
     @Order(4)
     void update_room_by_id(){

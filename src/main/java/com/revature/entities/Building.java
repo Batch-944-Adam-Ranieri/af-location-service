@@ -1,5 +1,8 @@
 package com.revature.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.context.annotation.Lazy;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +22,8 @@ public class Building {
     @Column(name = "loc_id")
     private int locationId;
 
-    @OneToMany(mappedBy = "buildingId", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
+    @OneToMany(mappedBy = "buildingId")
     List<Room> rooms;
 
     public Building() {

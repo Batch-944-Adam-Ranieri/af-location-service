@@ -4,16 +4,13 @@ import com.revature.AFLocationService.AfLocationServiceApplication;
 import com.revature.entities.Building;
 import com.revature.entities.Location;
 import com.revature.exceptions.BuildingNotFoundException;
-import com.revature.exceptions.LocationNotFoundException;
 import com.revature.repos.BuildingRepo;
 import com.revature.repos.LocationRepo;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -113,7 +110,7 @@ public class BuildingServiceTests {
     @Order(4)
     void get_buildings_by_location_test(){
         int id = testLocation.getLocationId();
-        Mockito.when(buildingrepo.findBuildingsByLocationId(id)).thenReturn(testBuildingList);
+        Mockito.when(buildingrepo.findByLocationIdEquals(id)).thenReturn(testBuildingList);
 
         List<Building> buildingsByLoc = this.buildingService.getBuildingByLocation(id);
         Assertions.assertNotNull(buildingsByLoc);

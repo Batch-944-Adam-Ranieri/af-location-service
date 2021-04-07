@@ -16,7 +16,7 @@ public class Room {
     @Column(name = "room_name")
     private String name;
 
-    @Column(name = "type")
+    @Column(name = "room_type")
     @Enumerated(value = EnumType.STRING)
     private RoomType type;
 
