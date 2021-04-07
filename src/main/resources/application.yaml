@@ -9,8 +9,8 @@ spring:
       config:
         enabled: false
       discovery:
-        instanceId: ${spring.application.name}
-          healthCheckPath: /health
-          health-check-interval: 120s
+        instanceId: location-service
+        healthCheckPath: /health
+        health-check-interval: 120s
 server:
   port: 9000

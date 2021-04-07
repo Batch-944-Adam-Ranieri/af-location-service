@@ -36,12 +36,12 @@ public class SecurityAspect {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
         String auth = request.getHeader("Authorization");
-
-        WebClient webClient = WebClient.create(this.getEnv("AUTH_SERVER"));
+//
+//        WebClient webClient = WebClient.create(this.getEnv("AUTH_SERVER"));
         try{
             logger.info("TEST TEST");
-            UserDto userDTO = webClient
-                    .post().uri("/verify")
+            UserDto userDTO = webClientBuilder.build()
+                    .post().uri("http://auth-service/verify")
                     .body(Mono.just(auth), String.class)
                     .retrieve()
                     .onStatus(httpStatus -> HttpStatus.UNAUTHORIZED.equals(httpStatus),

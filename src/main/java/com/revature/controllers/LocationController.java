@@ -94,6 +94,10 @@ public class LocationController {
         }
     }
 
+    @GetMapping("/health")
+    public Boolean healthCheck(){
+        return true;
+    }
     public Location locationTransfer(LocationDto locationDTO) {
         Location location = new Location();
         location.setCity(locationDTO.getCity());
