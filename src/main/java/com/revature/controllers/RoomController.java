@@ -64,7 +64,7 @@ public class RoomController {
 
         if (userDto.getRole().equals(adminRoll) || userDto.getRole().equals(trainerRoll)) {
             if(type == null) {
-                rooms = this.roomService.getAllRooms();
+                rooms = this.roomService.getRoomsByBuildingId(buildingId);
             }
             else {
                 rooms = this.roomService.getRoomsByType(buildingId, type);
