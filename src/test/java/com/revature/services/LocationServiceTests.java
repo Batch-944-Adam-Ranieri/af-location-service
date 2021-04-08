@@ -6,9 +6,7 @@ import com.revature.exceptions.LocationNotFoundException;
 import com.revature.repos.LocationRepo;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 
 
@@ -26,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 @SpringBootTest(classes = AfLocationServiceApplication.class)
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class LocationServiceTests {
+class LocationServiceTests {
 
     @InjectMocks
     LocationServiceImpl locationService;
@@ -67,11 +64,11 @@ public class LocationServiceTests {
     void create_location() {
         Mockito.when(locationRepo.save(any())).thenReturn(testLocation);
 
-        Location location = new Location(5,"Test City","Test State","20033");
+        Location location = new Location(5, "Test City", "Test State", "20033");
         location = locationService.createLocation(location);
         System.out.println(location);
         Assertions.assertNotNull(location);
-        Assertions.assertEquals(0,location.getLocationId());
+        Assertions.assertEquals(0, location.getLocationId());
     }
 
     @Order(2)
@@ -85,7 +82,7 @@ public class LocationServiceTests {
             Location location = locationService.getLocationById(id);
 
             System.out.println(locationService.getLocationById(id));
-           // System.out.println(location);
+            // System.out.println(location);
 //            Assertions.assertNotNull(location);
 
             Assertions.assertEquals(1, location.getLocationId());
@@ -136,7 +133,7 @@ public class LocationServiceTests {
     @Test
     void get_location_by_id_exception_test() {
         Mockito.when(locationRepo.findById(100)).thenReturn(Optional.empty());
-        illegalLocation = new Location(100,"madison","wi","53704");
+        illegalLocation = new Location(100, "madison", "wi", "53704");
 
 
         try {
@@ -151,7 +148,7 @@ public class LocationServiceTests {
     @Order(7)
     @Test
     void update_location_exception_test() {
-        illegalLocation = new Location(100,"madison","wi","53704");
+        illegalLocation = new Location(100, "madison", "wi", "53704");
         Mockito.when(locationRepo.findById(100)).thenReturn(Optional.empty());
         Mockito.when(locationRepo.save(any())).thenReturn(illegalLocation);
 
@@ -162,23 +159,4 @@ public class LocationServiceTests {
         } catch (LocationNotFoundException e) {
         }
     }
-//    @Order(10)
-//    @Test
-//    void alternate_update_test(){
-//        Mockito.when(locationRepo.findById(1)).thenReturn(Optional.of(testLocation));
-//        Mockito.when(locationRepo.save(any())).thenReturn(testLocation);
-//
-//        try{
-//            String city = "New City";
-//            Location location = new Location(testLocation.getLocationId(),city, testLocation.getState(), testLocation.getZipcode());
-//            location = this.locationService.updateLocation(location);
-//            Assertions.assertNotNull(location);
-//            Assertions.assertEquals(location.getCity(),city);
-//        }catch(LocationNotFoundException e){
-//            Assertions.fail();
-//        }
-//
-//    }
-
-
 }

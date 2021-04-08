@@ -2,16 +2,14 @@ package com.revature.repos;
 
 import com.revature.AFLocationService.AfLocationServiceApplication;
 import com.revature.entities.Location;
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import sun.jvm.hotspot.utilities.Assert;
 
 import java.util.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(classes= AfLocationServiceApplication.class)
-public class LocationRepoTests {
+class LocationRepoTests {
 
     @Autowired
     LocationRepo locationRepo;

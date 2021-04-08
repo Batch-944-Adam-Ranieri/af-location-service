@@ -5,36 +5,26 @@ import com.revature.entities.Building;
 import com.revature.entities.Location;
 import com.revature.entities.Room;
 import com.revature.entities.RoomType;
-import com.revature.exceptions.BuildingNotFoundException;
 import com.revature.exceptions.RoomNotFoundException;
 import com.revature.repos.BuildingRepo;
-import com.revature.repos.LocationRepo;
 import com.revature.repos.RoomRepo;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import javax.naming.ldap.HasControls;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-
-//import static com.revature.services.BuildingServiceTests.illegalBuilding;
-//import static com.revature.services.BuildingServiceTests.testBuildingList;
 
 @SpringBootTest(classes = AfLocationServiceApplication.class)
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class RoomServiceTests {
+class RoomServiceTests {
 
     @InjectMocks
     RoomServiceImpl roomService;
@@ -66,12 +56,6 @@ public class RoomServiceTests {
             testRoomList.add(room);
         }
         illegalBuilding = new Building(100,"Illegal Address",100);
-
-//        Mockito.when(roomRepo.save(testRoom)).thenReturn(testRoom);
-//        Mockito.when(roomRepo.findAll()).thenReturn(testRoomList);
-//        Mockito.when(roomRepo.findById(2)).thenReturn(Optional.of(testRoomList.get(1)));
-//        Mockito.when(roomRepo.findById(100)).thenReturn(Optional.empty());
-//        Mockito.when(roomRepo.findRoomByBuildingId(illegalBuilding.getBuildingId())).thenReturn(new ArrayList<Room>());
 
     }
 
@@ -184,8 +168,6 @@ public class RoomServiceTests {
     void delete_room(){
         Mockito.when(roomRepo.findById(testRoom.getRoomId())).thenReturn(Optional.of(testRoom));
         int id = testRoom.getRoomId();
-
-//        Assertions.assertNotNull(id);
         Assertions.assertTrue(roomService.deleteRoom(testRoom.getRoomId()));
     }
 

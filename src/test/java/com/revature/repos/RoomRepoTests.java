@@ -1,7 +1,6 @@
 package com.revature.repos;
 
 import com.revature.AFLocationService.AfLocationServiceApplication;
-import com.revature.entities.Building;
 import com.revature.entities.Room;
 import com.revature.entities.RoomType;
 import org.junit.jupiter.api.*;

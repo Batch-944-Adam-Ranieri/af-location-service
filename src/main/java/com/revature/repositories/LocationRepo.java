@@ -1,7 +1,0 @@
-package com.revature.repositories;
-
-public class LocationRepo {
-
-
-
-}

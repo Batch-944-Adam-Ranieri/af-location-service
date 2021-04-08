@@ -11,7 +11,7 @@ import java.util.List;
 
 @SpringBootTest(classes= AfLocationServiceApplication.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class BuildingRepoTests {
+class BuildingRepoTests {
 
     @Autowired
     BuildingRepo buildingRepo;

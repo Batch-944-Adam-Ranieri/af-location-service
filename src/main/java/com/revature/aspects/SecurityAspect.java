@@ -1,7 +1,6 @@
 
 package com.revature.aspects;
 
-import com.revature.config.WebClientBuilder;
 import com.revature.dtos.UserDto;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -36,12 +35,11 @@ public class SecurityAspect {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
         String auth = request.getHeader("Authorization");
-//
-//        WebClient webClient = WebClient.create(this.getEnv("AUTH_SERVER"));
+
         try{
             logger.info("TEST TEST");
             UserDto userDTO = webClientBuilder.build()
-                    .post().uri("http://auth-service/verify")
+                    .post().uri(System.getenv("AUTH_SERVER"))
                     .body(Mono.just(auth), String.class)
                     .retrieve()
                     .onStatus(httpStatus -> HttpStatus.UNAUTHORIZED.equals(httpStatus),
@@ -64,13 +62,6 @@ public class SecurityAspect {
         }
         return null;
 
-        // THIS IS FOR TESTING (UNABLE TO FIGURE OUT HOW TO MOCK OUT ASPECT)
-//        UserDTO userDTO = new UserDTO(1,"email@revature.com","trainer");
-//        logger.info("JWT verified: " + userDTO);
-//        Object[] args = pjp.getArgs();
-//        args[0] = userDTO;
-//        Object obj = pjp.proceed();
-//        return obj;
     }
 
     @Pointcut("@annotation(com.revature.aspects.Verify)")

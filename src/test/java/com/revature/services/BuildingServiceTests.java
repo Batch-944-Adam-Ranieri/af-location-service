@@ -22,7 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class BuildingServiceTests {
+class BuildingServiceTests {
 
     @InjectMocks
     BuildingServiceImpl buildingService;
@@ -40,20 +40,20 @@ public class BuildingServiceTests {
     Building illegalBuilding;
 
     @BeforeAll
-    void setup(){
+    void setup() {
 
-        testBuildingList=new ArrayList<Building>();
-        for(int i = 1; i < 5; i++){
-            Building building = new Building(i, "test "+i, 1);
-            if(i==1) {
+        testBuildingList = new ArrayList<Building>();
+        for (int i = 1; i < 5; i++) {
+            Building building = new Building(i, "test " + i, 1);
+            if (i == 1) {
                 testBuilding = building;
             }
             testBuildingList.add(building);
         }
 
-        illegalBuilding = new Building(100,"Illegal Building Address",100);
-        testLocation = new Location(1, "Dallas","TX","75019");
-        illegalLocation = new Location(100,"Illegal City","Illegal State","illegalzip");
+        illegalBuilding = new Building(100, "Illegal Building Address", 100);
+        testLocation = new Location(1, "Dallas", "TX", "75019");
+        illegalLocation = new Location(100, "Illegal City", "Illegal State", "illegalzip");
 
     }
 
@@ -77,88 +77,88 @@ public class BuildingServiceTests {
         Building building = new Building(0, "123 Created Address", 1);
         building = this.buildingService.createBuilding(building);
         Assertions.assertNotNull(building);
-        Assertions.assertEquals(0,building.getBuildingId());
+        Assertions.assertEquals(0, building.getBuildingId());
     }
 
     @Test
     @Order(2)
-    void get_all_buildings_test(){
+    void get_all_buildings_test() {
         Mockito.when(buildingrepo.findAll()).thenReturn(testBuildingList);
 
         List<Building> buildingList = this.buildingService.getAllBuildings();
         Assertions.assertNotNull(buildingList);
-        Assertions.assertNotEquals(0,buildingList.size());
+        Assertions.assertNotEquals(0, buildingList.size());
     }
 
     @Test
     @Order(3)
-    void get_building_by_id_test(){
+    void get_building_by_id_test() {
         Mockito.when(buildingrepo.findById(1)).thenReturn(Optional.of(testBuilding));
 
-        try{
+        try {
             int id = testBuilding.getBuildingId();
             Building building = this.buildingService.getBuildingById(id);
             Assertions.assertNotNull(building);
             Assertions.assertEquals(1, building.getBuildingId());
 
-        }catch(BuildingNotFoundException e){
+        } catch (BuildingNotFoundException e) {
             Assertions.fail();
         }
     }
 
     @Test
     @Order(4)
-    void get_buildings_by_location_test(){
+    void get_buildings_by_location_test() {
         int id = testLocation.getLocationId();
         Mockito.when(buildingrepo.findByLocationIdEquals(id)).thenReturn(testBuildingList);
 
         List<Building> buildingsByLoc = this.buildingService.getBuildingByLocation(id);
         Assertions.assertNotNull(buildingsByLoc);
-        for (Building b: buildingsByLoc){
-            Assertions.assertEquals(id,b.getLocationId());
+        for (Building b : buildingsByLoc) {
+            Assertions.assertEquals(id, b.getLocationId());
         }
     }
 
     @Test
     @Order(5)
-    void update_building(){
+    void update_building() {
         Mockito.when(buildingrepo.findById(testBuilding.getBuildingId())).thenReturn(java.util.Optional.of(testBuilding));
         Mockito.when(buildingrepo.save(testBuilding)).thenReturn(testBuilding);
-        try{
+        try {
             String updatedAddress = "Updated Address";
             System.out.println(testBuilding);
             Building building = new Building(testBuilding.getBuildingId(), updatedAddress, testLocation.getLocationId());
             building = this.buildingService.updateBuilding(building);
             Assertions.assertNotNull(building);
             Assertions.assertEquals(updatedAddress, building.getAddress());
-        }catch(BuildingNotFoundException e){
+        } catch (BuildingNotFoundException e) {
             Assertions.fail();
         }
     }
 
     @Test
     @Order(6)
-    void get_building_by_id_exception_test(){
+    void get_building_by_id_exception_test() {
         Mockito.when(buildingrepo.findById(100)).thenReturn(Optional.empty());
 
-        try{
+        try {
             this.buildingService.getBuildingById(100);
             Assertions.fail();
-        }catch(BuildingNotFoundException e){
+        } catch (BuildingNotFoundException e) {
 
         }
     }
 
     @Test
     @Order(7)
-    void update_building_exception_test(){
+    void update_building_exception_test() {
         Mockito.when(buildingrepo.findById(100)).thenReturn(Optional.empty());
         Mockito.when(buildingrepo.save(any())).thenReturn(illegalBuilding);
 
-        try{
+        try {
             this.buildingService.updateBuilding(illegalBuilding);
             Assertions.fail();
-        }catch(BuildingNotFoundException e){
+        } catch (BuildingNotFoundException e) {
 
         }
     }
@@ -168,7 +168,6 @@ public class BuildingServiceTests {
     void delete_building() {
         Assertions.assertTrue(buildingService.deleteBuildingById(testBuilding.getBuildingId()));
     }
-
 
 
 }

@@ -11,6 +11,7 @@ spring:
       config:
         enabled: false
       discovery:
+        enabled: true
         instanceId: location-service
         healthCheckPath: /health
         health-check-interval: 120s

@@ -2,35 +2,28 @@ package com.revature.controllers;
 
 
 import com.revature.AFLocationService.AfLocationServiceApplication;
-import com.revature.entities.Building;
 import com.revature.entities.Room;
 import com.revature.entities.RoomType;
 import com.revature.exceptions.RoomNotFoundException;
 import com.revature.services.RoomService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
+import org.junitpioneer.jupiter.SetEnvironmentVariable;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = AfLocationServiceApplication.class)
@@ -38,7 +31,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class RoomControllerTests {
+@TestPropertySource(properties = {"spring.cloud.discovery.enabled=false", "spring.cloud.consul.enabled=false", "spring.cloud.config.enabled=false"})
+@SetEnvironmentVariable(key = "AUTH_SERVER", value = "http://35.232.107.40:8080/verify")
+class RoomControllerTests {
 
     @Autowired
     MockMvc mvc;
@@ -49,38 +44,9 @@ public class RoomControllerTests {
     static String trainerJwt;
     static String adminJwt;
 
-    protected static void setEnv(Map<String, String> newenv) throws Exception {
-        try {
-            Class<?> processEnvironmentClass = Class.forName("java.lang.ProcessEnvironment");
-            Field theEnvironmentField = processEnvironmentClass.getDeclaredField("theEnvironment");
-            theEnvironmentField.setAccessible(true);
-            Map<String, String> env = (Map<String, String>) theEnvironmentField.get(null);
-            env.putAll(newenv);
-            Field theCaseInsensitiveEnvironmentField = processEnvironmentClass.getDeclaredField("theCaseInsensitiveEnvironment");
-            theCaseInsensitiveEnvironmentField.setAccessible(true);
-            Map<String, String> cienv = (Map<String, String>)     theCaseInsensitiveEnvironmentField.get(null);
-            cienv.putAll(newenv);
-        } catch (NoSuchFieldException e) {
-            Class[] classes = Collections.class.getDeclaredClasses();
-            Map<String, String> env = System.getenv();
-            for(Class cl : classes) {
-                if("java.util.Collections$UnmodifiableMap".equals(cl.getName())) {
-                    Field field = cl.getDeclaredField("m");
-                    field.setAccessible(true);
-                    Object obj = field.get(env);
-                    Map<String, String> map = (Map<String, String>) obj;
-                    map.clear();
-                    map.putAll(newenv);
-                }
-            }
-        }
-    }
 
     @BeforeAll
     static void setUp() throws Exception {
-        Map<String, String> authserver = new HashMap<>();
-        authserver.put("AUTH_SERVER", "http://35.232.107.40:8080");
-        setEnv(authserver);
         trainerJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoidHJhaW5lciIsImlkIjo5LCJlbWFpbCI6InBvc3RtYW4udGVzdEBlbWFpbC5jb20ifQ.ho14xAMZkwH-RUMWcrEPwyFXOHVMbIY992o5B14EpQA";
         adminJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJpZCI6MjMsImVtYWlsIjoibGNhcnJpY284MjdAZ21haWwuY29tIn0.lrI1-a3CfLb-nVeHZ9BJBHJ1MN2RHezl8DyP8J4GM8A";
 
@@ -149,12 +115,6 @@ public class RoomControllerTests {
 
     @Test
     void getAllRoomsByTypeExceptionTest()throws Exception{
-//        List<Room> rooms = new ArrayList<Room>();
-//        for(int i = 0; i < 5; i++){
-//            Room room = new Room(1, "testName", RoomType.VIRTUAL, 10, 1);
-//            rooms.add(room);
-//        }
-//        Mockito.when(roomService.getAllRooms()).thenReturn(rooms);
 
         mvc.perform(MockMvcRequestBuilders
                 .get("/locations/1/buildings/1/rooms?type=STUFF")
@@ -265,16 +225,7 @@ public class RoomControllerTests {
                 .header("Authorization",trainerJwt))
                 .andExpect(status().isNotFound());
     }
-//    @Test
-//    void getBuildingNotExistTest()throws Exception{
-//        ResultActions ra = mvc.perform(get("/locations/1/buildings/1000/rooms/1").header("Authorization", "authorized"));
-//        ra.andExpect(status().is(HttpStatus.NOT_FOUND.value()));
-//    }
-//    @Test
-//    void getRoomLocationNotExistTest()throws Exception{
-//        ResultActions ra = mvc.perform(get("/locations/1000/buildings/1/rooms/1").header("Authorization", "authorized"));
-//        ra.andExpect(status().is(HttpStatus.NOT_FOUND.value()));
-//    }
+
     @Test
     void getAllRoomsBuildingNotExist ()throws Exception{
         List<Room> rooms = new ArrayList<Room>();
