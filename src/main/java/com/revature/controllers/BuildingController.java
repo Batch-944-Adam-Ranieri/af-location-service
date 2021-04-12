@@ -25,6 +25,7 @@ import java.util.List;
  */
 @Component
 @RestController
+@CrossOrigin
 public class BuildingController {
 
     @Autowired

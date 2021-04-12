@@ -18,6 +18,7 @@ import java.util.List;
 
 @Component
 @RestController
+@CrossOrigin
 public class RoomController {
 
     private static final String ADMIN = "admin";

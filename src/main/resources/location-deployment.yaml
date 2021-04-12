@@ -1,0 +1,22 @@
+apiVersion: locationtracker/v1
+kind: Deployment
+metadata:
+  name: location-deployment
+  labels:
+    app: location
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: locationtracker
+  template:
+    metadata:
+      labels:
+        app: locationtracker
+    spec:
+      containers:
+        - name: locationtracker
+          image: location-service:latest
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: Never
