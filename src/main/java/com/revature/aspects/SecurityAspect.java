@@ -18,17 +18,33 @@ import reactor.core.publisher.Mono;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Before any controller method is called, the verifyJWT is called to
+ * make sure the jwt is valid. If valid, the user info is placed into
+ * the first arg of the controller. If not valid, throws error.
+ */
 @Component
 @Aspect
 public class SecurityAspect {
     private Logger logger = Logger.getLogger(SecurityAspect.class);
 
+    /**
+     * WebClient injection for WebClientBuilder
+     */
     @Autowired
     private WebClient.Builder webClientBuilder;
     public static String getEnv(String key) {
         return System.getenv(key);
     }
 
+    /**
+     * Called when pointcut method is implemented. Used for verifying incoming JWT at join point.
+     *
+     * @param pjp       Join Point
+     * @return          If JWT is valid, sets the userDTO for the method at that join point.
+     *                  If JWT is not valid, throws exception and returns not authorized request.
+     * @throws Throwable when JWT cannot be verified.
+     */
     @Around("controllerMethodsPointCut()")
     public Object verifyJwt(ProceedingJoinPoint pjp) throws Throwable {
         // PRODUCTION CODE
@@ -63,7 +79,9 @@ public class SecurityAspect {
 
     }
 
-
+    /**
+     * Point cut method to run when @Verify is used at join point
+     */
     @Pointcut("@annotation(com.revature.aspects.Verify)")
     private void controllerMethodsPointCut(){
         // needed for pointcut expression

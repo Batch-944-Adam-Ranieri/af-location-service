@@ -5,6 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.reactive.function.client.WebClient;
 
+/**
+ * Configuration for WebBuilder that allows the API to communicate
+ * with the load balancer and other services.
+ */
 @Configuration
 public class WebClientBuilder {
 

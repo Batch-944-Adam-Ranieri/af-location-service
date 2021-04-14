@@ -5,7 +5,9 @@ import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 import org.apache.log4j.Logger;
 
-
+/**
+ *  Aspect that will control the logging for the application
+ */
 @Aspect
 @Component
 public class LoggingAspect {

@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS location_;
 
 CREATE TABLE location_(
     location_id INTEGER NOT NULL AUTO_INCREMENT,
+    "name" VARCHAR(200),
     city VARCHAR(200) NOT NULL,
     state VARCHAR(50) NOT NULL,
     zipcode VARCHAR(20) NOT NULL,

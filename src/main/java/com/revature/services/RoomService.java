@@ -6,6 +6,9 @@ import com.revature.exceptions.RoomNotFoundException;
 
 import java.util.List;
 
+/**
+ * Service interface for Crud operations on Room objects
+ */
 public interface RoomService {
 
     Room createRoom(Room room);

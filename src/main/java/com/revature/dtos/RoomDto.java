@@ -2,6 +2,10 @@ package com.revature.dtos;
 
 import com.revature.entities.Room;
 
+/**
+ * Data transfer object that is not persisted and is only meant to take the input from the request body. Has all the
+ * same fields and methods as the entity version
+ */
 public class RoomDto {
 
     private int roomId;

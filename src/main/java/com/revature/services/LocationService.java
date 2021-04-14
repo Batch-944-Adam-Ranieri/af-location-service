@@ -5,6 +5,9 @@ import com.revature.exceptions.LocationNotFoundException;
 
 import java.util.List;
 
+/**
+ * Service interface for Crud operations on Location objects
+ */
 public interface LocationService {
 
     Location createLocation(Location location);

@@ -6,6 +6,7 @@ import com.revature.dtos.BuildingDto;
 import com.revature.dtos.UserDto;
 import com.revature.entities.Building;
 import com.revature.exceptions.BuildingNotFoundException;
+import com.revature.exceptions.LocationNotFoundException;
 import com.revature.services.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,9 +18,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
+ * Controller for handling Building requests
  * <p>
- * Controller for endpoints concerned with buildings in the database
- * </p>
+ *      This controller is designed to handle requests for performing CRUD operations on buildings
+ *      in the AssignForce database. These requests are intended to be used by Revature's AssignForce web page
+ *      to allow the user to track room reservations by building location. The Building objects contain the
+ *      address of a building that contains rooms used by Revature.
+ *
  * @author Stefan Maurer, Hogan Brown, Michael Bennett, Nathan J, Samuel Araga
  * @version 1.0
  */
@@ -28,15 +33,19 @@ import java.util.List;
 @CrossOrigin
 public class BuildingController {
 
+    /**
+     * Building Service Injection
+     */
     @Autowired
     BuildingService buildingService;
     static final String ADMIN = "admin";
 
     /**
+     * Create a new building
      *<p>
      *     Handler method for a post to the buildings endpoint. Used to create
      *     building entries in the database.
-     *</p>
+     *
      * @param userDto       User data transfer object populated by the SecurityAspect.
      *                      Used to determine a users roll and CRUD permissions.
      * @param locationId    Location Id provided in the URI path. Assigned to the new
@@ -44,10 +53,8 @@ public class BuildingController {
      * @param buildingDTO   Building data transfer object provided by the request body.
      *                      Used by the getBuilding method to construct a Building object.
      * @param auth          Authentication JWT provided by the request header.
+     *
      * @return A ResponseEntity<Building> that has a body of the Building object that was created
-     * @see com.revature.aspects.SecurityAspect
-     * @see com.revature.entities.Building
-     * @see com.revature.dtos.BuildingDto
      */
     @Verify
     @PostMapping("/locations/{locationId}/buildings")
@@ -65,6 +72,23 @@ public class BuildingController {
 
     }
 
+
+    /**
+     * Get all buildings
+     *<p>
+     *     Handler method for the get all buildings endpoint. Used to retrieve all
+     *     building records at a given location from the Building table in the
+     *     AssignForce database.
+     *
+     * @param userDto       User data transfer object populated by the SecurityAspect.
+     *                      Used to determine a users roll and CRUD permissions.
+     * @param locationId    Location Id provided in the URI path. Assigned to the new
+     *                      Building object returned by the getBuilding method.
+     * @param auth          Authentication JWT provided by the request header.
+     *
+     * @return A ResponseEntity<List<Location>> that has a body of the list of Location
+     * objects that were retrieved from the database.
+     */
     @Verify
     @GetMapping("/locations/{locationId}/buildings")
     public ResponseEntity<List<Building>> getAllBuildings(UserDto userDto,
@@ -75,6 +99,21 @@ public class BuildingController {
         return ResponseEntity.status(HttpStatus.OK).body(buildings);
     }
 
+    /**
+     * Get building by ID
+     *<p>
+     *     Handler method for get building by id endpoint. Used to retrieve a
+     *     building record at a given location from the AssignForce database
+     *     by a building ID and location ID.
+     *
+     * @param userDto       User data transfer object populated by the SecurityAspect.
+     *                      Used to determine a users roll and CRUD permissions.
+     * @param buildingId    Unique building ID
+     * @param auth          Authentication JWT provided by the request header.
+     *
+     * @return A ResponseEntity<Building> that has a body of the building object
+     * retrieved from the database.
+     */
     @Verify
     @GetMapping("/locations/{locationId}/buildings/{buildingId}")
     public ResponseEntity<Building> getBuildingById(UserDto userDto,
@@ -89,7 +128,23 @@ public class BuildingController {
         return ResponseEntity.status(HttpStatus.OK).body(building);
     }
 
-
+    /**
+     * Update building by ID
+     *<p>
+     *     Handler method for update building endpoint. Used to update a
+     *     building record from the AssignForce database by a building ID
+     *     and location ID.
+     *
+     * @param userDto       User data transfer object populated by the SecurityAspect.
+     *                      Used to determine a users roll and CRUD permissions.
+     * @param locationId    Unique location ID.
+     * @param buildingDTO   Building data transfer object provided by the request body.
+     *                      Used by the getBuilding method to construct a Building object.
+     * @param auth          Authentication JWT provided by the request header.
+     *
+     * @return A ResponseEntity<Building> that has a body of a building object retrieved
+     * from the AssignForce database.
+     */
     @Verify
     @PutMapping("/locations/{locationId}/buildings/{buildingId}")
     public ResponseEntity<Building> updateBuilding(UserDto userDto,
@@ -111,17 +166,33 @@ public class BuildingController {
         }
     }
 
-        @Verify
-        @DeleteMapping("/locations/{locationId}/buildings/{buildingId}")
-        public ResponseEntity<Boolean> deleteBuilding (UserDto userDto,
-                                                        @PathVariable int locationId, @PathVariable int buildingId,
-                                                        @RequestHeader(name = "Authorization", required = false) String auth){
-            if (userDto.getRole().equals(ADMIN)) {
-                boolean result = buildingService.deleteBuildingById(buildingId);
-                return ResponseEntity.status(HttpStatus.OK).body(result);
-            } else {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    /**
+     * Delete building by ID
+     *<p>
+     *     Handler method for update location endpoint. Used to update a
+     *     location record from the AssignForce database by a building ID
+     *     and location ID.
+     *
+     * @param userDto       User data transfer object populated by the SecurityAspect.
+     *                      Used to determine a users roll and CRUD permissions.
+     * @param locationId    Unique location ID.
+     * @param buildingId    Unique building ID.
+     * @param auth          Authentication JWT provided by the request header.
+     *
+     * @return A ResponseEntity<Boolean> that returns true if the record was deleted
+     * and false if the record still exists.
+     */
+    @Verify
+    @DeleteMapping("/locations/{locationId}/buildings/{buildingId}")
+    public ResponseEntity<Boolean> deleteBuilding (UserDto userDto,
+                                                    @PathVariable int locationId, @PathVariable int buildingId,
+                                                    @RequestHeader(name = "Authorization", required = false) String auth){
+        if (userDto.getRole().equals(ADMIN)) {
+            boolean result = buildingService.deleteBuildingById(buildingId);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
-            }
         }
     }
+}

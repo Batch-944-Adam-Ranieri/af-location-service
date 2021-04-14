@@ -5,6 +5,9 @@ import com.revature.exceptions.BuildingNotFoundException;
 
 import java.util.List;
 
+/**
+ * Service interface for Crud operations on Building objects
+ */
 public interface BuildingService {
 
     Building createBuilding(Building building);

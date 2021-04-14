@@ -5,6 +5,10 @@ import com.revature.entities.Room;
 
 import java.util.List;
 
+/**
+ * Data transfer object that is not persisted and is only meant to take the input from the request body. Has all the
+ * same fields and methods as the entity version
+ */
 public class BuildingDto {
 
     private int buildingId;
