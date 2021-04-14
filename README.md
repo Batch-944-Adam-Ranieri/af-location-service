@@ -18,7 +18,8 @@ Locations are objects containing the city, state, and zipcode of the geographica
   "locationId" : INT,
   "city" : "STRING",
   "state" : "STRING",
-  "zipcode" : "STRING"
+  "zipcode" : "STRING",
+  "name": "STRING"
 }
 ```
 
