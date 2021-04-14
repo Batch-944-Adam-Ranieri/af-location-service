@@ -1,6 +1,11 @@
 # af-location-service
 Microservice responsible for the Location vertical. Part of the AssignForce suite
 
+## Environment Variables
+This repository requires one environment variable `AUTH_SERVER` for deployment
+It should be in the form of `${name-of-authorization-service-here}/verify`. The authorization service
+should also be deployed on the same K8 cluster so that discovery is possible.
+
 ## Routes, Requests, and Responses
 The Location service is subdivided into 3 objects; Location, Building, and Room.  Valid requests will return a Location, Building, or Room JSON object.
 
@@ -13,7 +18,8 @@ Locations are objects containing the city, state, and zipcode of the geographica
   "locationId" : INT,
   "city" : "STRING",
   "state" : "STRING",
-  "zipcode" : "STRING"
+  "zipcode" : "STRING",
+  "name": "STRING"
 }
 ```
 
